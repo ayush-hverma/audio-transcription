@@ -1,0 +1,281 @@
+[
+  {
+    "start": "00:00:00:448",
+    "end": "00:00:03:688",
+    "speaker": "Speaker A",
+    "text": "হ্যালো মা, তুমি আজকে সকালবেলা পার্কে গেছিলে?",
+    "emotion": "curious",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:04:308",
+    "end": "00:00:06:788",
+    "speaker": "Speaker B",
+    "text": "হ্যাঁ, সাড়ে আটটার সময় পার্কে গেছিলাম।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:07:608",
+    "end": "00:00:10:588",
+    "speaker": "Speaker A",
+    "text": "আচ্ছা ঠিক আছে, আর কি করছো পুরো দিন?",
+    "emotion": "curious",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:11:188",
+    "end": "00:00:15:488",
+    "speaker": "Speaker B",
+    "text": "পার্ক থেকে এসে একটুখানি ব্যায়াম, ব্যায়াম করেছি।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:15:488",
+    "end": "00:00:17:988",
+    "speaker": "Speaker B",
+    "text": "তারপরে চা বানিয়েছি।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:18:888",
+    "end": "00:00:23:688",
+    "speaker": "Speaker B",
+    "text": "আর চা, মুড়ি এগুলো খেয়েছি।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:24:088",
+    "end": "00:00:27:388",
+    "speaker": "Speaker A",
+    "text": "আর তুমি কোথায় গেছিলে সন্ধ্যাবেলা?",
+    "emotion": "curious",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:28:488",
+    "end": "00:00:35:688",
+    "speaker": "Speaker B",
+    "text": "সন্ধ্যাবেলা রোজের পাঁচটার সময় <proper-noun>ব্রহ্মাকুমারী</proper-noun> যাই, রাজযোগ যেটাকে বলে সেইখানে যাই।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:35:688",
+    "end": "00:00:43:188",
+    "speaker": "Speaker B",
+    "text": "সেইখানে গেলে মন একদম শান্ত হয়ে যায়।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:43:188",
+    "end": "00:00:53:688",
+    "speaker": "Speaker B",
+    "text": "তো সবাইকে একটু এই সবের থেকে একটু যারা পড়াশোনা করে তাদের একটু এর সাথে যোগ থাকা ভালো।",
+    "emotion": "persuasive",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:53:688",
+    "end": "00:00:59:488",
+    "speaker": "Speaker B",
+    "text": "কিউকি পড়াশোনার জন্য মনকে অনেক শান্ত রাখা অনেক ভেরি জরুরি হচ্ছে।",
+    "emotion": "persuasive",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:59:488",
+    "end": "01:01:288",
+    "speaker": "Speaker A",
+    "text": "<proper-noun>স্ট্রেস</proper-noun> কম করা এসব।",
+    "emotion": "understanding",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:01:588",
+    "end": "01:02:888",
+    "speaker": "Speaker B",
+    "text": "হ্যাঁ, <proper-noun>স্ট্রেস</proper-noun> কম করার।",
+    "emotion": "affirmative",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:02:888",
+    "end": "01:04:288",
+    "speaker": "Speaker A",
+    "text": "আর কোন কি ভালো লাগে বেশি?",
+    "emotion": "curious",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:06:288",
+    "end": "01:19:488",
+    "speaker": "Speaker B",
+    "text": "আমাকে যেমন আমি হচ্ছে যে কলকাতার দেশের হচ্ছে যে মেয়ে তো আমাকে দেশের খেতিবাড়িও ভালো লাগে।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:20:288",
+    "end": "01:26:288",
+    "speaker": "Speaker B",
+    "text": "আর দেশের শাকসবজি তারপরে হচ্ছে যে কেনাকাটিও, <proper-noun>শপিং</proper-noun>।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:26:288",
+    "end": "01:32:888",
+    "speaker": "Speaker B",
+    "text": "আমাকে শাড়ি অনেক ভালো লাগে, <proper-noun>শপিং</proper-noun> করতে শাড়ি, শাড়ি অনেক <proper-noun>শপিং</proper-noun> করতে থাকি।",
+    "emotion": "enthusiastic",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:32:888",
+    "end": "01:33:388",
+    "speaker": "Speaker A",
+    "text": "আবার বলো।",
+    "emotion": "curious",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:33:388",
+    "end": "01:38:488",
+    "speaker": "Speaker B",
+    "text": "আর গয়না কাটিও নতুন নতুন দেখলে কিনার ইচ্ছা থাকে <proper-noun>ইমিটেশন</proper-noun>।",
+    "emotion": "enthusiastic",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:38:488",
+    "end": "01:39:088",
+    "speaker": "Speaker A",
+    "text": "ঠিক আছে।",
+    "emotion": "neutral",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:39:088",
+    "end": "01:43:888",
+    "speaker": "Speaker A",
+    "text": "এবার আমি তো বাংলার কিছু মুভি, সিরিয়াল দেখিনি, তুমি দেখো?",
+    "emotion": "curious",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:44:488",
+    "end": "01:46:888",
+    "speaker": "Speaker B",
+    "text": "বাংলা সিরিয়াল তো দেখি এখন।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:46:888",
+    "end": "01:53:288",
+    "speaker": "Speaker B",
+    "text": "বাংলা সিরিয়াল দেখি, বাংলা সিনেমা বচপন থেকে আমাকে খুব ভালো লাগে উত্তম সুচিত্রার মুভি।",
+    "emotion": "enthusiastic",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:53:288",
+    "end": "01:56:888",
+    "speaker": "Speaker B",
+    "text": "আগে ছোটবেলা থেকে আমি দেখে আসছি খুবই ভালো লাগে।",
+    "emotion": "enthusiastic",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:57:588",
+    "end": "02:02:588",
+    "speaker": "Speaker B",
+    "text": "আর হিন্দির মুভির মধ্যে <proper-noun>শাহরুখ খানের</proper-noun> মুভি ভালো লাগে।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:03:088",
+    "end": "02:06:388",
+    "speaker": "Speaker A",
+    "text": "ঠিক আছে মা, এবার যে একটু ভালো রান্না করে নাও।",
+    "emotion": "playful",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:06:688",
+    "end": "02:08:588",
+    "speaker": "Speaker B",
+    "text": "না, সোয়াবিনের রান্না হচ্ছে।",
+    "emotion": "factual",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:08:588",
+    "end": "02:10:688",
+    "speaker": "Speaker B",
+    "text": "আজকে সোয়াবিন আর রুটি।",
+    "emotion": "factual",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:10:688",
+    "end": "02:14:588",
+    "speaker": "Speaker B",
+    "text": "তো আমি হচ্ছে যে আমি পনিরের সবজি খুব ভালো বানাই।",
+    "emotion": "confident",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:14:588",
+    "end": "02:17:788",
+    "speaker": "Speaker B",
+    "text": "পনিরের, ফুলকপির, <proper-noun>চিল্লি</proper-noun>।",
+    "emotion": "descriptive",
+    "language": "BEN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:18:088",
+    "end": "02:19:588",
+    "speaker": "Speaker A",
+    "text": "ঠিক আছে মা, ঠিক আছে, বাই বাই।",
+    "emotion": "calm",
+    "language": "BEN",
+    "end_of_speech": true
+  }
+]

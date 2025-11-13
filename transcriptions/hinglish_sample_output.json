@@ -1,0 +1,254 @@
+[
+  {
+    "start": "00:00:00",
+    "end": "00:00:08",
+    "speaker": "Speaker A",
+    "text": "यार हुन्फा, कल मेरा test था और seriously मुझे नहीं लगता कि ये standardized tests किसी student की असली capability दिखाते हैं।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:08",
+    "end": "00:00:14",
+    "speaker": "Speaker B",
+    "text": "बिल्कुल सही बोल रहे हो। जैसे कि एक ही type का question paper देकर सबको judge करना fair कैसे हो सकता है?",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:14",
+    "end": "00:00:16",
+    "speaker": "Speaker B",
+    "text": "हर इंसान की learning style अलग होती है।",
+    "emotion": "calm",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:16",
+    "end": "00:00:20",
+    "speaker": "Speaker A",
+    "text": "Exactly. कुछ लोग theory में अच्छे होते हैं, कुछ practical में।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:20",
+    "end": "00:00:23",
+    "speaker": "Speaker A",
+    "text": "लेकिन test में तो सिर्फ एक ही तरह से judge किया जाता है।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:23",
+    "end": "00:00:29",
+    "speaker": "Speaker B",
+    "text": "और ऊपर से time pressure भी होता है। मतलब तीन घंटे में decide हो जाएगा कि मैं कितनी talented हूं? ये क्या बात हुई?",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:29",
+    "end": "00:00:32",
+    "speaker": "Speaker A",
+    "text": "Precisely. और marks का pressure अलग।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:32",
+    "end": "00:00:38",
+    "speaker": "Speaker A",
+    "text": "Students को लगता है कि test में 90 plus आया तो ही वो intelligent हैं, नहीं तो सब बेकार।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:38",
+    "end": "00:00:42",
+    "speaker": "Speaker B",
+    "text": "ये mindset ही गलत है। real life में भी कोई आपसे MCQ नहीं पूछता।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:42",
+    "end": "00:00:46",
+    "speaker": "Speaker B",
+    "text": "वहां skills, creativity, teamwork और emotional intelligence matter करते हैं।",
+    "emotion": "confident",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:46",
+    "end": "00:00:50",
+    "speaker": "Speaker A",
+    "text": "हाँ, और ये standardized tests तो बिल्कुल भी creativity को encourage नहीं करते।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:51",
+    "end": "00:00:53",
+    "speaker": "Speaker A",
+    "text": "बस रट्टा मारो और निकल जाओ।",
+    "emotion": "sarcastic",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:53",
+    "end": "00:00:57",
+    "speaker": "Speaker B",
+    "text": "Exactly. और एक और बात, test ज्यादातर rote learning पर depend करते हैं।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:57",
+    "end": "00:01:01",
+    "speaker": "Speaker B",
+    "text": "Concepts को समझना, apply करना ये सब तो बाद में रह ही जाता है।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:01",
+    "end": "00:01:04",
+    "speaker": "Speaker A",
+    "text": "और सबसे बड़ी बात, हर student की background अलग होती है।",
+    "emotion": "calm",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:04",
+    "end": "00:01:08",
+    "speaker": "Speaker A",
+    "text": "कोई resources afford कर सकता है, कोई नहीं। तो fair comparison कैसे?",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:09",
+    "end": "00:01:15",
+    "speaker": "Speaker B",
+    "text": "सही कहा। मतलब standardized test से ज्यादा तो students को देखना चाहिए कि वो real world problems कैसे solve करता है।",
+    "emotion": "confident",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:16",
+    "end": "00:01:21",
+    "speaker": "Speaker B",
+    "text": "बस marks देख के label लगा देते हैं। average, below average, topper । बिल्कुल toxic system ।",
+    "emotion": "disgusted",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:22",
+    "end": "00:01:28",
+    "speaker": "Speaker A",
+    "text": "हाँ यार, कभी-कभी लगता है कि system हमको समझने के लिए नहीं बस categorize करने के लिए बना है।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:29",
+    "end": "00:01:35",
+    "speaker": "Speaker B",
+    "text": "100% agree. अब time आ गया है कि education system थोड़ा flexible हो, real talent को पहचाने सिर्फ numbers को नहीं।",
+    "emotion": "persuasive",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:36",
+    "end": "00:01:39",
+    "speaker": "Speaker A",
+    "text": "हाँ, वरना हम सब बस एक ही race में दौड़ते रह जाएंगे।",
+    "emotion": "frustrated",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:39",
+    "end": "00:01:42",
+    "speaker": "Speaker A",
+    "text": "और शायद खुद को कभी discover नहीं कर पाएंगे।",
+    "emotion": "sad",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:42",
+    "end": "00:01:45",
+    "speaker": "Speaker B",
+    "text": "True that <proper-noun>Shitij</proper-noun>. बस hope है कि future में ये चीजें change हो।",
+    "emotion": "empathetic",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:45",
+    "end": "00:01:47",
+    "speaker": "Speaker B",
+    "text": "For now बस survive करना है।",
+    "emotion": "sad",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:48",
+    "end": "00:01:49",
+    "speaker": "Speaker A",
+    "text": "Exactly.",
+    "emotion": "calm",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:49",
+    "end": "00:01:50",
+    "speaker": "Speaker A",
+    "text": "चल चाय पीने चलते हैं।",
+    "emotion": "calm",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:51",
+    "end": "00:01:52",
+    "speaker": "Speaker A",
+    "text": "ये system तो अभी बदलेगा नहीं।",
+    "emotion": "resigned",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:01:53",
+    "end": "00:01:55",
+    "speaker": "Speaker A",
+    "text": "पर चाय से mood जरूर बदल जाएगा।",
+    "emotion": "hopeful",
+    "language": "HIN-ENG",
+    "end_of_speech": true
+  }
+]

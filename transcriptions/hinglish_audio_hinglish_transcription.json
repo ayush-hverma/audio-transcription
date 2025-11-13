@@ -1,0 +1,1217 @@
+[
+  {
+    "start": "00:00:00",
+    "end": "00:00:03",
+    "speaker": "Speaker A",
+    "text": "which is decent, but we are pushing to cross 85%.",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:03",
+    "end": "00:00:10",
+    "speaker": "Speaker A",
+    "text": "हमने एक प्रोग्रेस ट्रैकर डैशबोर्ड भी लॉन्च करा है, which is अ न्यू आइडिया।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:10",
+    "end": "00:00:16",
+    "speaker": "Speaker A",
+    "text": "पेरेंट्स को वीकली रिपोर्ट मिलती है। देखो घर बैठ के मुझे पता है मेरा बच्चा जा रहा है, बट ये नहीं पता ना कि पढ़ रहा है कि नहीं पढ़ रहा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:00:16",
+    "end": "00:02:04",
+    "speaker": "Speaker A",
+    "text": "अब जब मुझे एक रिपोर्ट मिलेगी, मुझे भी सेटिस्फेक्शन रहेगा कि वो क्या कर रहा है, वो सही तो कर रहा है, वो पढ़ तो रहा है, उसे समझ तो आ रहा है। इससे पेरेंट्स का ना हमारे प्लेटफार्म पे एंगेजमेंट ज्यादा इंक्रीज हुआ है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:02:04",
+    "end": "00:03:00",
+    "speaker": "Speaker B",
+    "text": "सही बात है यार parents का इंक्लूजन इज वेरी क्रूशियल। वही तो डिसीजन मेकर्स है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:03:00",
+    "end": "00:03:11",
+    "speaker": "Speaker B",
+    "text": "11th 12th के बच्चे डिसीजन थोड़ी ले सकते हैं। वो तो साइंस भी अपने मम्मी पापा से पूछ कर लेते हैं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:03:11",
+    "end": "00:03:50",
+    "speaker": "Speaker B",
+    "text": "तो डिसीजन मेकर को दिखाना कि वेयर दे आर इन्वेस्टिंग एंड व्हाट ऑल पर्क्स दे आर गेटिंग एंड व्हाट ऑल रिटर्न्स दे आर गेटिंग इज वेरी इंपोर्टेंट।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:03:50",
+    "end": "00:03:56",
+    "speaker": "Speaker B",
+    "text": "अगर उन्हें लगे चाइल्ड सीरियस है और प्रोग्रेस हो रहा है तो रिन्यूअल्स गारंटीड है फिर तो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:03:57",
+    "end": "00:03:57",
+    "speaker": "Speaker A",
+    "text": "ट्रू।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:03:58",
+    "end": "00:04:04",
+    "speaker": "Speaker A",
+    "text": "वैसे <proper-noun>आस्था</proper-noun>, तुम्हें नहीं लगता कि एडटेक में अब स्टोरी टेलिंग से ज्यादा ट्रस्ट बिल्डिंग पे फोकस आना चाहिए।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:04:04",
+    "end": "00:06:06",
+    "speaker": "Speaker A",
+    "text": "आई मीन कहानी तो कोई भी बता देगा ना।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:08",
+    "end": "00:06:15",
+    "speaker": "Speaker B",
+    "text": "100% यार ब्रांड फ्लशी हो सकता है पर अगर कंटेंट वीक है तो स्टूडेंट tiktok नहीं कोर्स ले रहा है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:15",
+    "end": "00:06:22",
+    "speaker": "Speaker B",
+    "text": "अब लॉन्ग टर्म प्ले वही जीतेगा जिसके पास डेप्थ है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:22",
+    "end": "00:06:26",
+    "speaker": "Speaker B",
+    "text": "फैकल्टी की क्वालिटी, डाउट सॉल्विंग, स्टूडेंट केयर।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:26",
+    "end": "00:06:34",
+    "speaker": "Speaker B",
+    "text": "क्योंकि इन द एंड ऐसे कोर्सेस में स्टूडेंट का एक्सपीरियंस सबसे ज्यादा मैटर करता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:34",
+    "end": "00:06:39",
+    "speaker": "Speaker B",
+    "text": "बिकॉज़ आप स्टूडेंट के लिए ही काम कर रहे हो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:39",
+    "end": "00:06:40",
+    "speaker": "Speaker B",
+    "text": "एजुकेशन",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:40",
+    "end": "00:06:40",
+    "speaker": "Speaker B",
+    "text": "में",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:40",
+    "end": "00:06:44",
+    "speaker": "Speaker B",
+    "text": "काम करने पर आपको स्टूडेंट एक्सपीरियंस बहुत ज्यादा एक्सपेंड करना पड़ता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:44",
+    "end": "00:06:47",
+    "speaker": "Speaker B",
+    "text": "आप बनी बनाई बातें कब तक बता लोगे।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:47",
+    "end": "00:06:58",
+    "speaker": "Speaker B",
+    "text": "अगर स्टूडेंट का एक्सपीरियंस अच्छा नहीं है तो आफ्टर लीविंग दैट कोचिंग और कभी-कभी तो यह भी होता है ड्यूरिंग दैट कोचिंग एक्सपीरियंस आल्सो उसका एक्सपीरियंस अच्छा नहीं है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:06:58",
+    "end": "00:07:01",
+    "speaker": "Speaker B",
+    "text": "और वो बाहर जाके यही बोलेगा कि ये कोचिंग",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:01",
+    "end": "00:07:05",
+    "speaker": "Speaker B",
+    "text": "इंस्टीट्यूट तो बेकार है इसमें तो कुछ होता ही नहीं है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:05",
+    "end": "00:07:14",
+    "speaker": "Speaker B",
+    "text": "तो स्टूडेंट एक्सपीरियंस इज वेरी इंपोर्टेंट इसलिए ब्रांड को ज्यादा फ्लशी नहीं बनाना चाहिए ट्रस्ट बिल्डिंग पे ज्यादा काम होना चाहिए।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:14",
+    "end": "00:07:20",
+    "speaker": "Speaker A",
+    "text": "अग्रीड। पहले तो हाइप चल जाती थी कि देखो उसने कितना वहां से स्कोर करा वहीं जाना चाहिए वहीं सब कुछ होगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:20",
+    "end": "00:07:25",
+    "speaker": "Speaker A",
+    "text": "पर अब सब इतने इंटरकनेक्टेड है हर चीज दो सेकंड में ऑनलाइन पहुंच जाती है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:25",
+    "end": "00:07:30",
+    "speaker": "Speaker A",
+    "text": "कि अब तो सिर्फ ऑनेस्टी से ही सब कुछ चल सकता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:30",
+    "end": "00:07:35",
+    "speaker": "Speaker A",
+    "text": "यह कोर्स सबको आईआईटी नहीं दिलाएगा पर तुम्हारा बेस्ट निकलवा देगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:35",
+    "end": "00:07:40",
+    "speaker": "Speaker A",
+    "text": "एंड हो सकता है सबको आईआईटी नहीं अपना बेस्ट कॉलेज कोई और लगता हो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:40",
+    "end": "00:07:47",
+    "speaker": "Speaker A",
+    "text": "यह लाइन ऑनेस्ट है और लोग उस ऑनेस्टी को अप्रिशिएट करते हैं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:48",
+    "end": "00:07:53",
+    "speaker": "Speaker B",
+    "text": "वायर ये लाइन तो बिल्कुल टैग लाइन वर्दी है।",
+    "emotion": "happy",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:53",
+    "end": "00:07:55",
+    "speaker": "Speaker B",
+    "text": "इसको तो मैं अगली कैंपेन में यूज कर सकती हूं।",
+    "emotion": "happy",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:55",
+    "end": "00:07:56",
+    "speaker": "Speaker B",
+    "text": "यह तो बहुत ही स्मार्ट लाइन थी।",
+    "emotion": "happy",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:56",
+    "end": "00:07:56",
+    "speaker": "Speaker A",
+    "text": "हह।",
+    "emotion": "happy",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:56",
+    "end": "00:07:57",
+    "speaker": "Speaker A",
+    "text": "आप",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:57",
+    "end": "00:07:57",
+    "speaker": "Speaker A",
+    "text": "कहीं",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:57",
+    "end": "00:07:58",
+    "speaker": "Speaker A",
+    "text": "लिख",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:58",
+    "end": "00:07:58",
+    "speaker": "Speaker A",
+    "text": "लो।",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:07:58",
+    "end": "00:08:01",
+    "speaker": "Speaker A",
+    "text": "जोक्स अपार्ट मुझे लगता है एडटेक अब मैच्योर हो रहा है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:01",
+    "end": "00:08:03",
+    "speaker": "Speaker A",
+    "text": "इट इज ग्रोथ एट ऑल कॉस्ट।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:03",
+    "end": "00:08:07",
+    "speaker": "Speaker A",
+    "text": "इट्स जस्ट नॉट ऑल द हाइप स्टोरी टेलिंग या फिर ये बता के जो बेचना हो गया।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:07",
+    "end": "00:08:10",
+    "speaker": "Speaker A",
+    "text": "वाला जमाना सब चला गया है।",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:10",
+    "end": "00:08:13",
+    "speaker": "Speaker A",
+    "text": "अब फोकस ना एक सस्टेनेबल मॉडल पे आ गया है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:13",
+    "end": "00:08:13",
+    "speaker": "Speaker B",
+    "text": "राइट",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:13",
+    "end": "00:08:14",
+    "speaker": "Speaker B",
+    "text": "राइट",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:14",
+    "end": "00:08:15",
+    "speaker": "Speaker B",
+    "text": "यार",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:15",
+    "end": "00:08:16",
+    "speaker": "Speaker B",
+    "text": "बिल्कुल",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:16",
+    "end": "00:08:16",
+    "speaker": "Speaker B",
+    "text": "सही",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:16",
+    "end": "00:08:17",
+    "speaker": "Speaker B",
+    "text": "बात",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:17",
+    "end": "00:08:17",
+    "speaker": "Speaker B",
+    "text": "कही",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:17",
+    "end": "00:08:20",
+    "speaker": "Speaker B",
+    "text": "क्योंकि अब रिटेंशन इज मच लार्जर देन एक्विजिशन।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:20",
+    "end": "00:08:23",
+    "speaker": "Speaker B",
+    "text": "जो स्टूडेंट तुम्हारे साथ रहता है वही तुम्हारा ब्रांड बिल्ड करता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:23",
+    "end": "00:08:26",
+    "speaker": "Speaker B",
+    "text": "और एक सेटिस्फाइड स्टूडेंट थ्री और लीड्स लाता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:26",
+    "end": "00:08:30",
+    "speaker": "Speaker B",
+    "text": "अब तुम कितना ही परफॉर्मेंस एड्स कर लो सीपीएल संभाल लो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:31",
+    "end": "00:08:31",
+    "speaker": "Speaker B",
+    "text": "लास्ट",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:31",
+    "end": "00:08:37",
+    "speaker": "Speaker B",
+    "text": "जो तुम्हारा बच्चा है जो ऑर्गेनिक लीड आएगी उससे तुम्हारा इंटेंट बहुत ज्यादा होगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:37",
+    "end": "00:08:42",
+    "speaker": "Speaker B",
+    "text": "मान लो मैंने जाके तीन बच्चों को बताया कि तुम ये जाके कोचिंग ज्वाइन कर लो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:42",
+    "end": "00:08:47",
+    "speaker": "Speaker B",
+    "text": "उनकी इंटेंट इज सो हाई क्योंकि उनके दीदी भैया ने बोल दिया है कि ये जाके ज्वाइन कर लो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:47",
+    "end": "00:08:50",
+    "speaker": "Speaker B",
+    "text": "बट जो ऐड देखकर आ रहे हैं उनमें इंटेंट नहीं है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:50",
+    "end": "00:08:55",
+    "speaker": "Speaker B",
+    "text": "उन्होंने 30 सेकंड का कोई ऐड देखा है एंड दे आर जस्ट एक्सप्लोरिंग व्हाट ऑल ऑप्शंस डू दे हैव।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:55",
+    "end": "00:08:55",
+    "speaker": "Speaker A",
+    "text": "यार",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:55",
+    "end": "00:08:56",
+    "speaker": "Speaker A",
+    "text": "ये",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:56",
+    "end": "00:08:56",
+    "speaker": "Speaker A",
+    "text": "तो",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:56",
+    "end": "00:08:57",
+    "speaker": "Speaker A",
+    "text": "सही",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:57",
+    "end": "00:08:57",
+    "speaker": "Speaker A",
+    "text": "कर",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:08:57",
+    "end": "00:09:00",
+    "speaker": "Speaker A",
+    "text": "आजकल ऐड तो लोग स्किप करने के लिए ही देखते हैं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:00",
+    "end": "00:09:04",
+    "speaker": "Speaker A",
+    "text": "यह जो आपने ऑर्गेनिक ग्रोथ बोली ना कि दीदी भैया वाली।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:04",
+    "end": "00:09:07",
+    "speaker": "Speaker A",
+    "text": "यही तो लॉन्ग टर्म एसेट है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:07",
+    "end": "00:09:11",
+    "speaker": "Speaker A",
+    "text": "इसी से तो लोग कन्विंस होते हैं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:11",
+    "end": "00:09:14",
+    "speaker": "Speaker A",
+    "text": "एड्स तो बर्न कर देते हैं बजट को।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:14",
+    "end": "00:09:17",
+    "speaker": "Speaker A",
+    "text": "लोगों को वैसे भी उसे स्किप ही करना होता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:17",
+    "end": "00:09:19",
+    "speaker": "Speaker A",
+    "text": "कोई ध्यान तो देता नहीं है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:19",
+    "end": "00:09:19",
+    "speaker": "Speaker B",
+    "text": "बिल्कुल",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:19",
+    "end": "00:09:20",
+    "speaker": "Speaker B",
+    "text": "बिल्कुल।",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:20",
+    "end": "00:09:20",
+    "speaker": "Speaker B",
+    "text": "एंड",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:20",
+    "end": "00:09:21",
+    "speaker": "Speaker B",
+    "text": "ऑफ",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:21",
+    "end": "00:09:21",
+    "speaker": "Speaker B",
+    "text": "द",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:21",
+    "end": "00:09:22",
+    "speaker": "Speaker B",
+    "text": "कंटेंट",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:22",
+    "end": "00:09:22",
+    "speaker": "Speaker B",
+    "text": "ही",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:22",
+    "end": "00:09:23",
+    "speaker": "Speaker B",
+    "text": "है।",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:23",
+    "end": "00:09:27",
+    "speaker": "Speaker B",
+    "text": "अगर तुम्हारा कोर्स जेन्युइनली वैल्यू ऐड करता है किसी बच्चे की लाइफ में तो",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:09:27",
+    "end": "00:09:30",
+    "speaker": "Speaker B",
+    "text": "वो वर्ड ऑफ माउथ से चलेगा ही तुम्हें उसकी टेंशन लेने की ही जरूरत नहीं है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:05:00",
+    "end": "00:09:57",
+    "speaker": "Speaker A",
+    "text": "पति उनको एक सेंस वो है कि तुम्हारे साथ कोई खड़ा है तो वो क्यों अच्छा नहीं करेंगे?",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:52",
+    "end": "00:17:15",
+    "speaker": "Speaker B",
+    "text": "बस यही यार वही कनेक्शन अगर मेंटेन हो गया ना तो एटेक सिर्फ बिजनेस नहीं है, मूवमेंट बन जाता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:17:38",
+    "end": "00:25:37",
+    "speaker": "Speaker B",
+    "text": "एटेक की सबसे अच्छी बात यही है कि जब कोई बच्चा पास आउट होता है एंड दे टेक योर नेम इन द मार्केट इट्स सच अ गुड फीलिंग, इट्स सच अ प्राउड फीलिंग।",
+    "emotion": "happy",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:25:53",
+    "end": "00:39:17",
+    "speaker": "Speaker B",
+    "text": "क्योंकि आपने सिर्फ एक कोर्स नहीं बेचा है, आपने सिर्फ एक मॉडल नहीं बेचा है यू हैव मेड अ ट्रू कनेक्शन क्योंकि वो चार साल बाद भी वापस आएगा और ये कहेगा कि मुझे इन इन सर ने पढ़ाया था इसलिए व्हाट आई एम टुडे।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:39:17",
+    "end": "00:41:01",
+    "speaker": "Speaker B",
+    "text": "यू आर एक्चुअली इंपैक्टिंग समवनस लाइफ।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:41:43",
+    "end": "00:45:36",
+    "speaker": "Speaker B",
+    "text": "तो हैविंग अ कनेक्शन इज ट्रूली वेरी इंपोर्टेंट फॉर ऑल द कोचिंग टीचर्स।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:46:14",
+    "end": "00:53:25",
+    "speaker": "Speaker A",
+    "text": "पर सही में यार सोचो तो ये बिजनेस कितना अच्छा काम आप कितना पुण्य का काम कर रहे हो आप किसी का फ्यूचर बना रहे हो।",
+    "emotion": "happy",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:53:10",
+    "end": "00:59:34",
+    "speaker": "Speaker A",
+    "text": "और आप बाद में जाके देखोगे जैसे आपने कहा कि आज भी आपको याद होगा कि आपकी कौन सी टीचर ने आपको हेल्प करा था।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:59:41",
+    "end": "01:05:28",
+    "speaker": "Speaker A",
+    "text": "इसी तरीके से अगर इस बिजनेस को सिर्फ इसी तरीके में रख देंगे तो कि सिर्फ बेचना है काम तो थोड़ी ना अच्छा रहेगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:06:36",
+    "end": "01:21:33",
+    "speaker": "Speaker A",
+    "text": "एटेक इज एक्चुअली अ वेरी नाइस प्लेटफार्म फॉर अस टू हेल्प स्टूडेंट्स विद जो टेक्नोलॉजी आ रही है अब उनको उनका सेटिस्फेक्शन देना पेरेंट्स को उनका सेटिस्फेक्शन देना।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:21:33",
+    "end": "01:28:39",
+    "speaker": "Speaker A",
+    "text": "एंड टीचर को भी समझ आना चाहिए कि वो स्टूडेंट एक्चुअली चाहता क्या है सबको एक ही टेक्स्ट बुक मॉडल से पढ़ाएंगे तो फिर क्या फायदा है एटेक का वो तो टीचर नॉर्मली भी कर लेता है वो तो बच्चा खुद से भी पढ़ लेगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:29:22",
+    "end": "01:36:20",
+    "speaker": "Speaker A",
+    "text": "लेकिन हमारा पॉइंट है कि बच्चे को समझना उसका पॉइंट समझना कि वो कैसे उसका लर्निंग स्टाइल है एंड उसी को अप्लाई करना।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:38:10",
+    "end": "01:40:00",
+    "speaker": "Speaker B",
+    "text": "सही बात है यार ये तो बहुत ही इंपोर्टेंट बात है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:40:00",
+    "end": "01:43:22",
+    "speaker": "Speaker B",
+    "text": "वैसे आपके दोस्तों ने अपनी जेई की प्रिपरेशन कहां से करी थी?",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:44:07",
+    "end": "01:56:25",
+    "speaker": "Speaker A",
+    "text": "यार उनको ना सही रिसोर्स ही नहीं मिला वो सोचते रहे कि कहां से करें एंड उस कंफ्यूजन में 10 जगहों से करने लग गए कोचिंग का भी पढ़ते थे स्कूल का भी पढ़ते थे घर में भी बैठ के अपने आप से भी पढ़ते थे।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "01:57:23",
+    "end": "02:01:27",
+    "speaker": "Speaker A",
+    "text": "एंड ऑफ द डे पे थोड़ा कंफ्यूज हो गए और थोड़ा सा पेपर के टाइम पे डर गए।",
+    "emotion": "sad",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:02:09",
+    "end": "02:06:35",
+    "speaker": "Speaker A",
+    "text": "टाइम मैनेजमेंट तो इस सब के बीच में समझ ही नहीं आया कि पेपर में करना कैसे है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:07:19",
+    "end": "02:09:18",
+    "speaker": "Speaker A",
+    "text": "तो उस चक्कर में उनको प्रॉब्लम तो बहुत आई।",
+    "emotion": "sad",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:09:41",
+    "end": "02:17:19",
+    "speaker": "Speaker A",
+    "text": "हो सकता है उनके टाइम पे अगर ये मॉडल्स होते तो शायद उनको और हेल्प मिल जाती और ये सारी प्रॉब्लम्स ना आती और वो और आगे अच्छा करते।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:18:39",
+    "end": "02:25:57",
+    "speaker": "Speaker B",
+    "text": "अच्छा आपका एआई इंटीग्रेशन का अगर हम कोई चैट बॉट बना दे अपने डैशबोर्ड में तो आपको लगता है कि वो चल जाएगा?",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:26:50",
+    "end": "02:31:17",
+    "speaker": "Speaker A",
+    "text": "मुझे लगता है हां अगर वो डाउट्स भी आंसर करे तो उसमें और बेटर होगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:31:31",
+    "end": "02:35:41",
+    "speaker": "Speaker A",
+    "text": "बट वही बात है ना जो कनेक्ट एक टीचर के साथ आएगा वो एक बॉट के साथ नहीं आएगा।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:36:22",
+    "end": "02:42:16",
+    "speaker": "Speaker A",
+    "text": "बॉट में हम बेसिकली एआई इंटीग्रेशन में उनके डाउट्स और पेरेंट्स के डाउट ज्यादा आंसर कर पाएंगे आपको क्या लगता है?",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "02:44:17",
+    "end": "03:05:32",
+    "speaker": "Speaker B",
+    "text": "अ मुझे ये लगता है कि जैसे कि बहुत ज्यादा रात हो रही है एंड कोई बच्चा पढ़ रहा है तो उस टाइम पर एआई विल हेल्प अ लॉट बिकॉज़ दे आर स्टडींग एंड इवन अ मेंटर इज नॉट 100% अवेलेबल 24 घंटों में एंड वी आर एनीवे गोइंग फॉर अ हाइब्रिड मॉडल यार बच्चे को जरूरत पड़ती है एंड एआई इज अ नेक्स्ट फ्यूचर एज वेल।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:06:29",
+    "end": "03:13:07",
+    "speaker": "Speaker B",
+    "text": "तो मुझे लगता है एआई मॉडल विल हेल्प अ लॉट इन दीस डैशबोर्ड्स एंड इट विल ऐड अ टच जो कि बाकी कोचिंग सेंटर्स अभी नहीं कर रहे हैं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:13:59",
+    "end": "03:16:16",
+    "speaker": "Speaker A",
+    "text": "राइट ये पार्ट तो मैंने सोचा ही नहीं लेट नाइट में।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:17:08",
+    "end": "03:21:33",
+    "speaker": "Speaker A",
+    "text": "वैसे तो आजकल हर स्टूडेंट एआई के पास ही पहले भागता है कि मुझे ये टॉपिक समझा दो।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:22:13",
+    "end": "03:27:29",
+    "speaker": "Speaker A",
+    "text": "एंड उसको अगर बोलो ना एक्सप्लेन मी लाइक आई एम अ फाइव ईयर ओल्ड वो बहुत अच्छे से सुना समझा देता है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:28:17",
+    "end": "03:30:35",
+    "speaker": "Speaker A",
+    "text": "मैंने तो ये बहुत बार ट्राई करा है आपने ट्राई करा है क्या?",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:32:15",
+    "end": "03:35:29",
+    "speaker": "Speaker B",
+    "text": "हां यार मैं तो <proper-noun>चैट जीपीटी</proper-noun> हर चीज के लिए यूज करती हूं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:36:27",
+    "end": "03:45:32",
+    "speaker": "Speaker B",
+    "text": "बट यार मेरा एक्सपीरियंस तो <proper-noun>आकाश</proper-noun> के साथ काफी अच्छा था बट अगर आपने कभी सुना हो जो एक बिजनेस था आई एम फॉरगेटिंग इट्स नेम।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:46:13",
+    "end": "03:46:38",
+    "speaker": "Speaker B",
+    "text": "<proper-noun>बाय जूस</proper-noun>।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:47:09",
+    "end": "03:49:39",
+    "speaker": "Speaker B",
+    "text": "दे डिड नॉट चेंज देयर स्ट्रेटजी एट ऑल।",
+    "emotion": "neutral",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "03:49:39",
+    "end": "04:00:34",
+    "speaker": "Speaker B",
+    "text": "वो काफी स्टिक रहे अपनी स्ट्रेटजी पे कि नहीं हम तो टेबलेट्स देंगे हम ऑनलाइन सलूशंस निकलवा देंगे अगर देखा होगा आपने कभी क्वेश्चन डाल के कोई।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:01:08",
+    "end": "04:03:27",
+    "speaker": "Speaker B",
+    "text": "तो <proper-noun>बाय जूस</proper-noun> पे सबसे पहली साइट आती है।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:03:51",
+    "end": "04:14:29",
+    "speaker": "Speaker B",
+    "text": "बट इफ यू नो दैट कंपनी वेंट अ लॉट ऑफ डाउन साइड आफ्टर दैट बिकॉज़ स्टूडेंट्स का ट्रस्ट ही नहीं रहा क्योंकि देयर वर देयर वाज नो इनोवेशन इन दैट।",
+    "emotion": "sad",
+    "language": "ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:15:40",
+    "end": "04:20:38",
+    "speaker": "Speaker A",
+    "text": "सही बात है क्योंकि वो एक वीडियो से इंटरेक्ट कर रहे थे ना वो लाइव तो इंटरेक्ट ही नहीं कर रहे थे।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:21:27",
+    "end": "04:25:37",
+    "speaker": "Speaker A",
+    "text": "वीडियो तो यार हम भी देखते हैं और लंबे-लंबे वीडियो देखने का फोकस किस में बचा है अब।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:26:09",
+    "end": "04:29:37",
+    "speaker": "Speaker A",
+    "text": "तो आपने जो पॉइंट बोला वो बहुत सही बोला कि उनके पास इंटरेक्शन नहीं था।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:30:14",
+    "end": "04:34:28",
+    "speaker": "Speaker A",
+    "text": "एंड वो बहुत स्टक थे अपने मॉडल पे कि हम इसी वीडियोस के थ्रू ही आगे बढ़ेंगे।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:34:23",
+    "end": "04:36:17",
+    "speaker": "Speaker A",
+    "text": "एआई इंटीग्रेशन तो बिल्कुल नहीं था।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:37:15",
+    "end": "04:44:27",
+    "speaker": "Speaker A",
+    "text": "हां ये जरूर सही था कि उनके पास कंटेंट बहुत था प्रोवाइड करने के लिए इसलिए जब भी आप कोई क्वेश्चन सर्च करते थे पहली वेबसाइट उन्हीं की आती थी।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:45:16",
+    "end": "04:51:19",
+    "speaker": "Speaker A",
+    "text": "बट आप खुद बताओ आप एक सिटिंग में बैठ के एक-एक घंटा दो-दो घंटा वीडियो देख पाओगे विदाउट लूजिंग फोकस।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:52:41",
+    "end": "04:54:49",
+    "speaker": "Speaker B",
+    "text": "अ नहीं यार मैं तो बिल्कुल ही नहीं देख पाती।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "04:55:32",
+    "end": "05:01:26",
+    "speaker": "Speaker B",
+    "text": "अ बट ठीक है सबका अपना-अपना मॉडल चल रहा है एवरीवन इज लर्निंग देयर ओन थिंग्स।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "05:02:04",
+    "end": "05:04:20",
+    "speaker": "Speaker B",
+    "text": "अ यार बे इस पर ना मिलकर बात करते हैं।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": true
+  },
+  {
+    "start": "00:10:00",
+    "end": "00:10:02",
+    "speaker": "Speaker A",
+    "text": "कैंपेंस डिस्कस कर लिए ऑन कॉल ही।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:02",
+    "end": "00:10:11",
+    "speaker": "Speaker A",
+    "text": "लेट्स सिट डाउन एंड मेक अ प्लान कि व्हाट ऑल कैंपेंस कैन वर्क आउट फॉर दिस शॉर्टलिस्ट इन्फ्लुएंसर्स एंड देन मे बी स्टार्ट रीचिंग आउट।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:11",
+    "end": "00:10:17",
+    "speaker": "Speaker A",
+    "text": "अ हो सकता है हम एडटेक में अपना खुद का बिजनेस कुछ नया कर ले व्हिच विल हेल्प द स्टूडेंट्स अ लॉट।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:18",
+    "end": "00:10:23",
+    "speaker": "Speaker B",
+    "text": "नाइसली सेड नेक्स्ट टाइम कॉफी रिफिल करते हैं और अगला कैंपेन प्लान करते हैं।",
+    "emotion": "happy",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:24",
+    "end": "00:10:25",
+    "speaker": "Speaker A",
+    "text": "ठीक है, ठीक है।",
+    "emotion": "neutral",
+    "language": "HIN",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:25",
+    "end": "00:10:27",
+    "speaker": "Speaker A",
+    "text": "चलो बाय बाय विल सी यू अराउंड।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": false
+  },
+  {
+    "start": "00:10:28",
+    "end": "00:10:29",
+    "speaker": "Speaker B",
+    "text": "बाय बाय।",
+    "emotion": "neutral",
+    "language": "HIN-ENG",
+    "end_of_speech": true
+  }
+]
