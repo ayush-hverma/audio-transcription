@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
-import { Upload, Play, Download, Save, Edit2, Check, X, Loader2, Database } from 'lucide-react';
+import { Upload, Play, Download, Save, Edit2, Check, X, Loader2, Database, ChevronDown, ChevronUp } from 'lucide-react';
 import AudioWaveformPlayer, { AudioWaveformPlayerHandle } from './components/AudioWaveformPlayer';
 
 const API_BASE_URL = 'http://localhost:5001';
@@ -46,6 +46,7 @@ function App() {
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [savingToDatabase, setSavingToDatabase] = useState(false);
+  const [isUploadFormExpanded, setIsUploadFormExpanded] = useState(false);
 
   const playerRef = useRef<AudioWaveformPlayerHandle | null>(null);
 
@@ -345,9 +346,24 @@ function App() {
 
         {/* Upload Section */}
         {!transcriptionData && (
-          <div className="bg-white rounded-lg shadow-xl p-8 mb-8">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-800">Upload Audio File</h2>
-
+          <div className="bg-white rounded-lg shadow-xl mb-8 max-w-2xl mx-auto overflow-hidden">
+            {/* Collapsible Header */}
+            <button
+              onClick={() => setIsUploadFormExpanded(!isUploadFormExpanded)}
+              className="w-full p-8 flex items-center justify-between hover:bg-gray-50 transition-colors"
+            >
+              <h2 className="text-2xl font-semibold text-gray-800">Upload Audio File</h2>
+              {isUploadFormExpanded ? (
+                <ChevronUp className="h-6 w-6 text-gray-600" />
+              ) : (
+                <ChevronDown className="h-6 w-6 text-gray-600" />
+              )}
+            </button>
+            
+            {/* Collapsible Content */}
+            <div className={`px-8 pb-8 transition-all duration-300 ease-in-out ${
+              isUploadFormExpanded ? 'max-h-[2000px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+            }`}>
             {/* Audio File Upload */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -436,6 +452,7 @@ function App() {
                 </>
               )}
             </button>
+            </div>
           </div>
         )}
 

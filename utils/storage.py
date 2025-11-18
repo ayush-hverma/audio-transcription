@@ -91,6 +91,55 @@ class StorageManager:
         }
         return content_types.get(extension, 'audio/mpeg')
     
+    def delete_audio_from_s3(self, s3_key: str) -> Dict[str, Any]:
+        """
+        Delete audio file from S3 bucket.
+        
+        Args:
+            s3_key: S3 object key (path in bucket)
+            
+        Returns:
+            Dictionary with deletion result
+        """
+        try:
+            if not self.s3_client:
+                return {
+                    'success': False,
+                    'error': 'S3 client not initialized. Please check AWS credentials.'
+                }
+            
+            # Delete object from S3
+            self.s3_client.delete_object(
+                Bucket=self.s3_bucket_name,
+                Key=s3_key
+            )
+            
+            print(f"✅ Deleted S3 object: {s3_key}")
+            
+            return {
+                'success': True,
+                'message': f'S3 object deleted successfully: {s3_key}'
+            }
+            
+        except ClientError as e:
+            error_code = e.response.get('Error', {}).get('Code', 'Unknown')
+            if error_code == 'NoSuchKey':
+                # Object doesn't exist, but that's okay - consider it deleted
+                print(f"⚠️ S3 object not found (may already be deleted): {s3_key}")
+                return {
+                    'success': True,
+                    'message': f'S3 object not found (may already be deleted): {s3_key}'
+                }
+            return {
+                'success': False,
+                'error': f"S3 deletion error: {str(e)}"
+            }
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f"Unexpected error during S3 deletion: {str(e)}"
+            }
+    
     def upload_audio_to_s3(self, local_file_path: str, s3_key: str) -> Dict[str, Any]:
         """
         Upload audio file to S3 bucket.
@@ -386,5 +435,80 @@ class StorageManager:
             return {
                 'success': False,
                 'error': f"Error updating transcription: {str(e)}"
+            }
+    
+    def delete_transcription(self, document_id: str) -> Dict[str, Any]:
+        """
+        Delete a transcription from MongoDB and its associated S3 audio file.
+        
+        Args:
+            document_id: MongoDB document ID
+            
+        Returns:
+            Dictionary with delete operation result
+        """
+        try:
+            if not self.collection:
+                return {
+                    'success': False,
+                    'error': 'MongoDB not initialized'
+                }
+            
+            from bson import ObjectId
+            
+            # First, get the document to extract S3 metadata before deleting
+            document = self.collection.find_one({'_id': ObjectId(document_id)})
+            
+            if not document:
+                return {
+                    'success': False,
+                    'error': 'Transcription not found'
+                }
+            
+            # Extract S3 key from document
+            s3_metadata = document.get('s3_metadata', {})
+            s3_key = s3_metadata.get('key', '')
+            
+            # Delete S3 object if key exists
+            s3_delete_result = None
+            if s3_key:
+                print(f"🗑️  Attempting to delete S3 object: {s3_key}")
+                s3_delete_result = self.delete_audio_from_s3(s3_key)
+                if not s3_delete_result.get('success'):
+                    # Log warning but continue with MongoDB deletion
+                    print(f"⚠️  Warning: Failed to delete S3 object: {s3_delete_result.get('error')}")
+            else:
+                print(f"⚠️  No S3 key found in document, skipping S3 deletion")
+            
+            # Delete document from MongoDB
+            delete_result = self.collection.delete_one({'_id': ObjectId(document_id)})
+            
+            if delete_result.deleted_count == 0:
+                return {
+                    'success': False,
+                    'error': 'Transcription not found in MongoDB'
+                }
+            
+            print(f"✅ Deleted transcription from MongoDB: {document_id}")
+            
+            # Prepare response message
+            message = 'Transcription deleted successfully'
+            if s3_key:
+                if s3_delete_result and s3_delete_result.get('success'):
+                    message += f'. S3 audio file ({s3_key}) also deleted.'
+                else:
+                    message += f'. Note: S3 audio file deletion had issues (check logs).'
+            
+            return {
+                'success': True,
+                'document_id': document_id,
+                'message': message,
+                's3_deleted': s3_delete_result.get('success') if s3_delete_result else False
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f"Error deleting transcription: {str(e)}"
             }
 

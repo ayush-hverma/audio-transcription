@@ -572,23 +572,44 @@ def transcribe_phrases():
             reference_text=reference_text
         )
         
-        # Get audio duration from transcription data
-        audio_duration = 0
-        if transcription_data:
-            last_phrase = transcription_data[-1]
-            end_time = last_phrase.get('end', '00:00:00:000')
-            # Parse timestamp to seconds
-            parts = end_time.split(':')
-            if len(parts) == 4:
-                h, m, s, ms = parts
-                audio_duration = int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000.0
+        # Get audio duration from the audio file
+        from pydub import AudioSegment
+        audio = AudioSegment.from_file(audio_path)
+        audio_duration = len(audio) / 1000.0  # Convert to seconds
+        
+        # Calculate duration for each phrase and add it to the phrase object
+        def timestamp_to_seconds(ts: str) -> float:
+            """Convert timestamp string to seconds."""
+            parts = ts.split(':')
+            if len(parts) == 4:  # HH:MM:SS:mmm
+                return int(parts[0]) * 3600 + int(parts[1]) * 60 + float(parts[2]) + float(parts[3]) / 1000.0
+            elif len(parts) == 3:  # H:MM:SS.mmm
+                return float(parts[0]) * 3600 + float(parts[1]) * 60 + float(parts[2])
+            elif len(parts) == 2:  # MM:SS.mmm
+                return float(parts[0]) * 60 + float(parts[1])
+            return float(ts)
+        
+        # Add duration to each phrase
+        processed_phrases = []
+        for phrase in transcription_data:
+            start_time = phrase.get('start', '00:00:00:000')
+            end_time = phrase.get('end', '00:00:00:000')
+            
+            start_seconds = timestamp_to_seconds(start_time)
+            end_seconds = timestamp_to_seconds(end_time)
+            duration = end_seconds - start_seconds
+            
+            # Add duration field to phrase
+            phrase_with_duration = phrase.copy()
+            phrase_with_duration['duration'] = duration
+            processed_phrases.append(phrase_with_duration)
         
         # Prepare simplified response
         response_data = {
-            'phrases': transcription_data,
+            'phrases': processed_phrases,
             'language': source_language,
             'audio_duration': audio_duration,
-            'total_phrases': len(transcription_data),
+            'total_phrases': len(processed_phrases),
             'metadata': {
                 'filename': filename,
                 'audio_path': f"/api/audio/{unique_filename}"
@@ -813,6 +834,37 @@ def update_transcription_by_id(transcription_id):
         }), 500
 
 
+@app.route('/api/transcriptions/<transcription_id>', methods=['DELETE'])
+def delete_transcription_by_id(transcription_id):
+    """
+    Delete a transcription from MongoDB.
+    """
+    try:
+        result = storage_manager.delete_transcription(transcription_id)
+        
+        if result['success']:
+            return jsonify({
+                'success': True,
+                'message': result.get('message', 'Transcription deleted successfully'),
+                'document_id': result.get('document_id')
+            })
+        else:
+            return jsonify({
+                'success': False,
+                'error': result.get('error', 'Failed to delete transcription')
+            }), 500
+    
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"❌ Error deleting transcription: {str(e)}")
+        print(error_trace)
+        
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
 @app.errorhandler(413)
 def request_entity_too_large(error):
     """Handle file too large error."""
@@ -855,6 +907,7 @@ if __name__ == '__main__':
     print("   GET  /api/transcriptions              - List all saved transcriptions")
     print("   GET  /api/transcriptions/<id>         - Get transcription by ID")
     print("   PUT  /api/transcriptions/<id>         - Update transcription by ID")
+    print("   DELETE /api/transcriptions/<id>       - Delete transcription by ID")
     print("="*100 + "\n")
     
     # Run server

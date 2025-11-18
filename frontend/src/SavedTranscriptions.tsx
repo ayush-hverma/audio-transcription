@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import axios from 'axios';
-import { Database, Play, Save, Edit2, Check, X, Loader2, ArrowLeft, Download } from 'lucide-react';
+import { Database, Play, Save, Edit2, Check, X, Loader2, ArrowLeft, Download, Trash2 } from 'lucide-react';
 import AudioWaveformPlayer, { AudioWaveformPlayerHandle } from './components/AudioWaveformPlayer';
 
 const API_BASE_URL = 'http://localhost:5001';
@@ -21,6 +21,7 @@ interface Phrase {
   emotion: string;
   language: string;
   end_of_speech: boolean;
+  duration?: number;
 }
 
 interface TranscriptionSummary {
@@ -87,6 +88,7 @@ function SavedTranscriptions() {
   });
   const [hasChanges, setHasChanges] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
   const playerRef = useRef<AudioWaveformPlayerHandle | null>(null);
 
@@ -231,6 +233,17 @@ function SavedTranscriptions() {
     setCurrentPlayingIndex((prev) => (prev !== null ? null : prev));
   }, []);
 
+  // Show loading state when fetching details - must be after all hooks
+  if (loadingDetails) {
+    return (
+      <main className="min-h-screen p-8 bg-gradient-to-br from-indigo-50 to-purple-50">
+        <div className="max-w-7xl mx-auto flex justify-center items-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin text-indigo-600" />
+        </div>
+      </main>
+    );
+  }
+
   const startEdit = (index: number) => {
     if (!selectedTranscription) return;
     const words = selectedTranscription.transcription_data.words || [];
@@ -300,6 +313,12 @@ function SavedTranscriptions() {
     if (editingPhraseIndex === null || !selectedTranscription) return;
 
     const updatedPhrases = [...(selectedTranscription.transcription_data.phrases || [])];
+    
+    // Calculate duration from start and end times
+    const startSeconds = timeToSeconds(editPhraseValues.start);
+    const endSeconds = timeToSeconds(editPhraseValues.end);
+    const duration = endSeconds - startSeconds;
+    
     updatedPhrases[editingPhraseIndex] = {
       ...updatedPhrases[editingPhraseIndex],
       start: editPhraseValues.start,
@@ -308,6 +327,7 @@ function SavedTranscriptions() {
       speaker: editPhraseValues.speaker,
       emotion: editPhraseValues.emotion,
       end_of_speech: editPhraseValues.end_of_speech,
+      duration: duration,
     };
 
     setSelectedTranscription({
@@ -361,6 +381,47 @@ function SavedTranscriptions() {
     link.href = url;
     link.download = `transcription_${selectedTranscription._id}.json`;
     link.click();
+  };
+
+  const deleteTranscription = async (id: string, showConfirm: boolean = true) => {
+    if (showConfirm) {
+      const confirmed = window.confirm(
+        'Are you sure you want to delete this transcription?\n\n' +
+        'This action cannot be undone. The following will be permanently deleted:\n' +
+        '• Transcription data from database\n' +
+        '• Audio file from S3 storage\n\n' +
+        'This action is irreversible.'
+      );
+      
+      if (!confirmed) {
+        return;
+      }
+    }
+
+    setDeleting(true);
+    try {
+      const response = await axios.delete(`${API_BASE_URL}/api/transcriptions/${id}`);
+
+      if (response.data.success) {
+        alert('Transcription deleted successfully!');
+        
+        // If we're viewing the deleted transcription, go back to list
+        if (selectedTranscription && selectedTranscription._id === id) {
+          setSelectedTranscription(null);
+          setHasChanges(false);
+        }
+        
+        // Refresh the list
+        fetchTranscriptions();
+      } else {
+        alert(`Error: ${response.data.error}`);
+      }
+    } catch (error: any) {
+      console.error('Error deleting transcription:', error);
+      alert(`Error: ${error.response?.data?.error || error.message}`);
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const getWordClassName = (index: number): string => {
@@ -431,6 +492,23 @@ function SavedTranscriptions() {
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Download
+                </button>
+                <button
+                  onClick={() => selectedTranscription && deleteTranscription(selectedTranscription._id)}
+                  disabled={deleting}
+                  className="bg-red-600 hover:bg-red-700 disabled:bg-gray-400 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center"
+                >
+                  {deleting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Deleting...
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </>
+                  )}
                 </button>
               </div>
             </div>
@@ -768,10 +846,25 @@ function SavedTranscriptions() {
                     <span className="font-medium">{transcription.audio_duration?.toFixed(2) || '0.00'}s</span>
                   </div>
                 </div>
-                <button className="mt-4 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center">
-                  <Play className="h-4 w-4 mr-2" />
-                  View Details
-                </button>
+                <div className="mt-4 flex gap-2">
+                  <button
+                    onClick={() => fetchTranscriptionDetails(transcription._id)}
+                    className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center"
+                  >
+                    <Play className="h-4 w-4 mr-2" />
+                    View Details
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteTranscription(transcription._id);
+                    }}
+                    className="bg-red-600 hover:bg-red-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center"
+                    title="Delete transcription"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             ))}
           </div>
