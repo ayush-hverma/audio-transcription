@@ -974,10 +974,13 @@ if __name__ == '__main__':
     print("="*100 + "\n")
     
     # Run server
+    import os
+    debug_mode = os.getenv('FLASK_ENV') != 'production'
+    port = int(os.getenv('FLASK_PORT', '5002'))  # Default to 5002 (available port in 5000-8000 range)
     app.run(
         host='0.0.0.0',
-        port=5001,
-        debug=True,
+        port=port,
+        debug=debug_mode,
         threaded=True
     )
 

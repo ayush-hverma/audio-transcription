@@ -1,0 +1,24 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: audio-transcription
+    ports:
+      - "5002:80"
+    restart: unless-stopped
+    # Environment variables are automatically loaded from backend/.env by the Dockerfile
+    # Uncomment below to override specific variables if needed:
+    # environment:
+    #   - FLASK_ENV=production
+    #   - FLASK_PORT=5002
+    # Optional: Uncomment to mount volumes for persistent data
+    # volumes:
+    #   - ./transcriptions:/app/transcriptions
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
