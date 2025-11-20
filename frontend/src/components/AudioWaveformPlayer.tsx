@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import RegionsPlugin from 'wavesurfer.js/dist/plugins/regions';
-import { Pause, Play, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
+import { Pause, Play, ZoomIn, ZoomOut, RotateCcw, X } from 'lucide-react';
 
 export interface AudioWaveformPlayerHandle {
   play: () => void;
@@ -29,6 +29,7 @@ interface AudioWaveformPlayerProps {
   height?: number;
   selectedWord?: SelectedWord | null;
   onWordTimeUpdate?: (index: number, start: number, end: number) => void;
+  onUnselectWord?: () => void;
 }
 
 const formatTime = (time: number): string => {
@@ -53,7 +54,7 @@ const formatTime = (time: number): string => {
 };
 
 const AudioWaveformPlayer = forwardRef<AudioWaveformPlayerHandle, AudioWaveformPlayerProps>(
-  ({ audioUrl, onTimeUpdate, onReady, onEnded, onPlay, onPause, height = 150, selectedWord, onWordTimeUpdate }, ref) => {
+  ({ audioUrl, onTimeUpdate, onReady, onEnded, onPlay, onPause, height = 150, selectedWord, onWordTimeUpdate, onUnselectWord }, ref) => {
     const containerRef = useRef<HTMLDivElement | null>(null);
     const audioElementRef = useRef<HTMLAudioElement | null>(null);
     const waveSurferRef = useRef<WaveSurfer | null>(null);
@@ -78,11 +79,12 @@ const AudioWaveformPlayer = forwardRef<AudioWaveformPlayerHandle, AudioWaveformP
       onPlay?: () => void;
       onPause?: () => void;
       onWordTimeUpdate?: (index: number, start: number, end: number) => void;
+      onUnselectWord?: () => void;
     }>({});
 
     useEffect(() => {
-      callbacksRef.current = { onTimeUpdate, onReady, onEnded, onPlay, onPause, onWordTimeUpdate };
-    }, [onTimeUpdate, onReady, onEnded, onPlay, onPause, onWordTimeUpdate]);
+      callbacksRef.current = { onTimeUpdate, onReady, onEnded, onPlay, onPause, onWordTimeUpdate, onUnselectWord };
+    }, [onTimeUpdate, onReady, onEnded, onPlay, onPause, onWordTimeUpdate, onUnselectWord]);
 
     // Keep zoomLevelRef in sync with zoomLevel
     useEffect(() => {
@@ -558,9 +560,22 @@ const AudioWaveformPlayer = forwardRef<AudioWaveformPlayerHandle, AudioWaveformP
         <div className="flex items-center justify-between gap-2 mb-2">
           <div className="flex items-center gap-1">
             {selectedWord && (
-              <div className="text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded border border-blue-200">
+              <div className="flex items-center gap-2 text-xs text-gray-600 bg-blue-50 px-2 py-1 rounded border border-blue-200">
                 <span className="font-semibold">Selected: </span>
                 <span className="font-mono">{selectedWord.word}</span>
+                {onUnselectWord && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      callbacksRef.current.onUnselectWord?.();
+                    }}
+                    className="ml-1 hover:bg-blue-100 rounded p-0.5 transition-colors"
+                    title="Unselect word"
+                    aria-label="Unselect word"
+                  >
+                    <X className="h-3 w-3 text-gray-600 hover:text-gray-800" />
+                  </button>
+                )}
                 {/* <span className="ml-2 text-gray-500">←/→ adjust start (1ms) | Shift+←/→ adjust end (1ms) | Enter to play</span> */}
               </div>
             )}

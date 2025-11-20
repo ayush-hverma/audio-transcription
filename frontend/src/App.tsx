@@ -44,6 +44,7 @@ interface Word {
   word: string;
   duration: number;
   language: string;
+  is_edited?: boolean;
 }
 
 interface TranscriptionData {
@@ -389,6 +390,7 @@ function App() {
         start: secondsToTimeString(start),
         end: secondsToTimeString(end),
         duration: end - start,
+        is_edited: true, // Mark as edited when timings are changed
       };
 
       setTranscriptionData({
@@ -572,6 +574,7 @@ function App() {
       end: editValues.end,
       word: editValues.word,
       duration: timeToSeconds(editValues.end) - timeToSeconds(editValues.start),
+      is_edited: true, // Mark as edited
     };
 
     setTranscriptionData({
@@ -793,9 +796,17 @@ function App() {
   };
 
   const getWordClassName = (index: number, word: string): string => {
+    if (!transcriptionData) return '';
+    
+    const wordObj = transcriptionData.words[index];
+    const isEdited = wordObj?.is_edited === true;
+    
     let classes = 'inline-block px-3 py-2 m-1 rounded border-2 cursor-pointer transition-all duration-200 hover:shadow-lg';
 
-    if (currentPlayingIndex === index) {
+    // Edited words get special highlighting (highest priority)
+    if (isEdited) {
+      classes += ' word-edited';
+    } else if (currentPlayingIndex === index) {
       classes += ' word-playing';
     } else {
       const match = matchesReference(word);
@@ -1213,22 +1224,30 @@ function App() {
               </div>
 
               {/* Legend */}
-              {referenceText && (
-                <div className="mt-4 flex gap-4 text-sm">
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-green-200 border-2 border-green-400 rounded mr-2"></div>
-                    <span>Correct</span>
+              <div className="mt-4 flex gap-4 text-sm flex-wrap">
+                {referenceText && (
+                  <>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-green-200 border-2 border-green-400 rounded mr-2"></div>
+                      <span>Correct</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="w-4 h-4 bg-yellow-200 border-2 border-yellow-400 rounded mr-2"></div>
+                      <span>Incorrect</span>
+                    </div>
+                  </>
+                )}
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-purple-200 border-2 border-purple-500 rounded mr-2 relative">
+                    <span className="absolute top-0 right-0 text-[0.5rem] text-purple-600">✎</span>
                   </div>
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-yellow-200 border-2 border-yellow-400 rounded mr-2"></div>
-                    <span>Incorrect</span>
-                  </div>
-                  <div className="flex items-center">
-                    <div className="w-4 h-4 bg-blue-300 border-2 border-blue-500 rounded mr-2"></div>
-                    <span>Playing</span>
-                  </div>
+                  <span>Edited</span>
                 </div>
-              )}
+                <div className="flex items-center">
+                  <div className="w-4 h-4 bg-blue-300 border-2 border-blue-500 rounded mr-2"></div>
+                  <span>Playing</span>
+                </div>
+              </div>
             </div>
 
             {/* Audio Player */}
@@ -1254,6 +1273,7 @@ function App() {
                     : null
                 }
                 onWordTimeUpdate={handleWordTimeUpdate}
+                onUnselectWord={() => setSelectedWordIndex(null)}
               />
             </div>
 

@@ -327,8 +327,17 @@ class StorageManager:
                 return None
                 
             from bson import ObjectId
+            from bson.errors import InvalidId
+            
+            # Validate ObjectId format
+            try:
+                obj_id = ObjectId(document_id)
+            except (InvalidId, ValueError) as e:
+                print(f"❌ Invalid transcription ID format: {document_id}")
+                return None
+            
             # Get document by ID
-            document = self.collection.find_one({'_id': ObjectId(document_id)})
+            document = self.collection.find_one({'_id': obj_id})
             
             if not document:
                 return None
@@ -343,16 +352,19 @@ class StorageManager:
                     print(f"🚫 Access denied: user {user_id} trying to access transcription assigned to {assigned_user_id}")
                     return None
             
-            # Convert ObjectId to string for JSON serialization
+            # Convert ObjectId to string for JSON serialization (for all cases)
             document['_id'] = str(document['_id'])
-            # Convert datetime to ISO format
-            if 'created_at' in document:
+            # Convert datetime to ISO format (for all cases)
+            if 'created_at' in document and isinstance(document['created_at'], datetime):
                 document['created_at'] = document['created_at'].isoformat()
-            if 'updated_at' in document:
+            if 'updated_at' in document and isinstance(document['updated_at'], datetime):
                 document['updated_at'] = document['updated_at'].isoformat()
+            
             return document
         except Exception as e:
-            print(f"Error retrieving transcription: {str(e)}")
+            print(f"❌ Error retrieving transcription: {str(e)}")
+            import traceback
+            print(traceback.format_exc())
             return None
     
     def assign_transcription(self, document_id: str, assigned_user_id: str) -> Dict[str, Any]:
