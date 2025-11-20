@@ -4,7 +4,7 @@ Storage utilities for S3 and MongoDB operations.
 import os
 import boto3
 from pymongo import MongoClient
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict, Any, Optional
 from botocore.exceptions import ClientError
 import json
@@ -184,7 +184,7 @@ class StorageManager:
                 'url': s3_url,
                 'region': self.s3_region,
                 'size_bytes': file_size,
-                'uploaded_at': datetime.utcnow().isoformat()
+                'uploaded_at': datetime.now(timezone.utc).isoformat()
             }
             
             return {
@@ -206,11 +206,12 @@ class StorageManager:
     def save_to_mongodb(self, transcription_data: Dict[str, Any], s3_metadata: Dict[str, Any], user_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Save transcription data and S3 metadata to MongoDB.
+        User ID is optional - if not provided, defaults to 'anonymous'.
         
         Args:
             transcription_data: Transcription JSON data
             s3_metadata: S3 metadata from upload
-            user_id: User ID to associate with this transcription
+            user_id: User ID to associate with this transcription (optional, defaults to 'anonymous')
             
         Returns:
             Dictionary with MongoDB operation result
@@ -222,19 +223,19 @@ class StorageManager:
                     'error': 'MongoDB not initialized. Please check MongoDB connection.'
                 }
             
+            # Use 'anonymous' if user_id is not provided
             if not user_id:
-                return {
-                    'success': False,
-                    'error': 'user_id is required to save transcription'
-                }
+                user_id = 'anonymous'
             
             # Prepare document
+            # assigned_user_id is None by default - admin will assign it later
             document = {
                 'transcription_data': transcription_data,
                 's3_metadata': s3_metadata,
-                'user_id': user_id,
-                'created_at': datetime.utcnow(),
-                'updated_at': datetime.utcnow()
+                'user_id': user_id,  # Creator/owner of the transcription
+                'assigned_user_id': None,  # Assigned to a specific user (managed by admin)
+                'created_at': datetime.now(timezone.utc),
+                'updated_at': datetime.now(timezone.utc)
             }
             
             # Insert document (MongoDB will create collection automatically if it doesn't exist)
@@ -259,25 +260,24 @@ class StorageManager:
                           original_filename: str, user_id: Optional[str] = None) -> Dict[str, Any]:
         """
         Complete save operation: upload audio to S3 and save transcription to MongoDB.
+        User ID is optional - if not provided, defaults to 'anonymous'.
         
         Args:
             local_audio_path: Path to local audio file
             transcription_data: Transcription JSON data
             original_filename: Original audio filename
-            user_id: User ID to associate with this transcription
+            user_id: User ID to associate with this transcription (optional, defaults to 'anonymous')
             
         Returns:
             Dictionary with complete operation result
         """
         try:
+            # Use 'anonymous' if user_id is not provided
             if not user_id:
-                return {
-                    'success': False,
-                    'error': 'user_id is required to save transcription'
-                }
+                user_id = 'anonymous'
             
             # Generate S3 key (path in bucket)
-            timestamp = datetime.utcnow().strftime('%Y%m%d_%H%M%S')
+            timestamp = datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')
             file_extension = os.path.splitext(original_filename)[1]
             s3_key = f"audio/{timestamp}_{original_filename}"
             
@@ -308,48 +308,197 @@ class StorageManager:
                 'error': f"Save operation error: {str(e)}"
             }
     
-    def get_transcription(self, document_id: str, user_id: Optional[str] = None) -> Optional[Dict[str, Any]]:
+    def get_transcription(self, document_id: str, user_id: Optional[str] = None, is_admin: bool = False) -> Optional[Dict[str, Any]]:
         """
         Retrieve transcription from MongoDB by document ID.
+        Regular users can only access transcriptions assigned to them.
+        Admins can access all transcriptions.
         
         Args:
             document_id: MongoDB document ID
-            user_id: User ID to verify ownership (required)
+            user_id: User ID to check access (if not admin)
+            is_admin: Whether the user is an admin
             
         Returns:
-            Document data or None if not found or user doesn't own it
+            Document data or None if not found or access denied
         """
         try:
             if not self.collection:
                 return None
-            
-            if not user_id:
-                return None
                 
             from bson import ObjectId
-            # Filter by both document ID and user_id to ensure user owns the document
-            document = self.collection.find_one({'_id': ObjectId(document_id), 'user_id': user_id})
-            if document:
-                # Convert ObjectId to string for JSON serialization
-                document['_id'] = str(document['_id'])
-                # Convert datetime to ISO format
-                if 'created_at' in document:
-                    document['created_at'] = document['created_at'].isoformat()
-                if 'updated_at' in document:
-                    document['updated_at'] = document['updated_at'].isoformat()
+            # Get document by ID
+            document = self.collection.find_one({'_id': ObjectId(document_id)})
+            
+            if not document:
+                return None
+            
+            # Check access: admins can see all, regular users only assigned ones
+            if not is_admin and user_id:
+                assigned_user_id = document.get('assigned_user_id')
+                # If assigned_user_id doesn't exist (old data), deny access
+                # If assigned_user_id exists but doesn't match, deny access
+                if assigned_user_id is None or str(assigned_user_id) != str(user_id):
+                    # User doesn't have access to this transcription
+                    print(f"🚫 Access denied: user {user_id} trying to access transcription assigned to {assigned_user_id}")
+                    return None
+            
+            # Convert ObjectId to string for JSON serialization
+            document['_id'] = str(document['_id'])
+            # Convert datetime to ISO format
+            if 'created_at' in document:
+                document['created_at'] = document['created_at'].isoformat()
+            if 'updated_at' in document:
+                document['updated_at'] = document['updated_at'].isoformat()
             return document
         except Exception as e:
             print(f"Error retrieving transcription: {str(e)}")
             return None
     
-    def list_transcriptions(self, limit: int = 100, skip: int = 0, user_id: Optional[str] = None) -> Dict[str, Any]:
+    def assign_transcription(self, document_id: str, assigned_user_id: str) -> Dict[str, Any]:
         """
-        List transcriptions from MongoDB filtered by user_id.
+        Assign a transcription to a specific user (admin only operation).
+        
+        Args:
+            document_id: MongoDB document ID
+            assigned_user_id: User ID to assign the transcription to
+            
+        Returns:
+            Dictionary with assignment result
+        """
+        try:
+            if not self.collection:
+                return {
+                    'success': False,
+                    'error': 'MongoDB not initialized'
+                }
+            
+            from bson import ObjectId
+            from bson.errors import InvalidId
+            
+            # Validate and convert ObjectId
+            try:
+                obj_id = ObjectId(document_id)
+            except (InvalidId, ValueError) as e:
+                return {
+                    'success': False,
+                    'error': f'Invalid transcription ID format: {str(e)}'
+                }
+            
+            # Ensure assigned_user_id is stored as string for consistent filtering
+            assigned_user_id_str = str(assigned_user_id)
+            
+            # Update the assigned_user_id field
+            update_result = self.collection.update_one(
+                {'_id': obj_id},
+                {
+                    '$set': {
+                        'assigned_user_id': assigned_user_id_str,
+                        'updated_at': datetime.now(timezone.utc)
+                    }
+                }
+            )
+            
+            if update_result.matched_count == 0:
+                return {
+                    'success': False,
+                    'error': 'Transcription not found'
+                }
+            
+            # Verify the assignment was saved correctly
+            updated_doc = self.collection.find_one({'_id': obj_id})
+            saved_assigned_id = updated_doc.get('assigned_user_id') if updated_doc else None
+            
+            print(f"✅ Assigned transcription {document_id} to user {assigned_user_id_str}")
+            print(f"   Verification: saved assigned_user_id = {saved_assigned_id}")
+            
+            if str(saved_assigned_id) != assigned_user_id_str:
+                print(f"⚠️  Warning: Assignment mismatch! Expected {assigned_user_id_str}, got {saved_assigned_id}")
+            
+            return {
+                'success': True,
+                'document_id': document_id,
+                'assigned_user_id': assigned_user_id_str,  # Return the string version for consistency
+                'message': 'Transcription assigned successfully'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f"Error assigning transcription: {str(e)}"
+            }
+    
+    def unassign_transcription(self, document_id: str) -> Dict[str, Any]:
+        """
+        Unassign a transcription (set assigned_user_id to None).
+        
+        Args:
+            document_id: MongoDB document ID
+            
+        Returns:
+            Dictionary with unassignment result
+        """
+        try:
+            if not self.collection:
+                return {
+                    'success': False,
+                    'error': 'MongoDB not initialized'
+                }
+            
+            from bson import ObjectId
+            from bson.errors import InvalidId
+            
+            # Validate and convert ObjectId
+            try:
+                obj_id = ObjectId(document_id)
+            except (InvalidId, ValueError) as e:
+                return {
+                    'success': False,
+                    'error': f'Invalid transcription ID format: {str(e)}'
+                }
+            
+            # Remove the assigned_user_id (set to None)
+            update_result = self.collection.update_one(
+                {'_id': obj_id},
+                {
+                    '$set': {
+                        'assigned_user_id': None,
+                        'updated_at': datetime.now(timezone.utc)
+                    }
+                }
+            )
+            
+            if update_result.matched_count == 0:
+                return {
+                    'success': False,
+                    'error': 'Transcription not found'
+                }
+            
+            print(f"✅ Unassigned transcription {document_id}")
+            
+            return {
+                'success': True,
+                'document_id': document_id,
+                'message': 'Transcription unassigned successfully'
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': f"Error unassigning transcription: {str(e)}"
+            }
+    
+    def list_transcriptions(self, limit: int = 100, skip: int = 0, user_id: Optional[str] = None, is_admin: bool = False) -> Dict[str, Any]:
+        """
+        List transcriptions from MongoDB.
+        Regular users can only see transcriptions assigned to them.
+        Admins can see all transcriptions.
         
         Args:
             limit: Maximum number of documents to return
             skip: Number of documents to skip
-            user_id: User ID to filter transcriptions (required)
+            user_id: User ID to filter transcriptions (if not admin)
+            is_admin: Whether the user is an admin (admins see all transcriptions)
             
         Returns:
             Dictionary with list of transcriptions and metadata
@@ -361,19 +510,36 @@ class StorageManager:
                     'error': 'MongoDB not initialized'
                 }
             
-            if not user_id:
-                return {
-                    'success': False,
-                    'error': 'user_id is required to list transcriptions'
-                }
+            # Build query filter
+            # Admins see all transcriptions, regular users only see assigned ones
+            if is_admin:
+                query_filter = {}
+                print(f"👑 Admin user - showing all transcriptions")
+            else:
+                if user_id:
+                    # Regular users see transcriptions assigned to them
+                    # Ensure user_id is a string for comparison (MongoDB stores assigned_user_id as string)
+                    user_id_str = str(user_id)
+                    # Match documents where assigned_user_id equals user_id
+                    # This will only match documents that have assigned_user_id field set to this user
+                    query_filter = {'assigned_user_id': user_id_str}
+                    print(f"🔍 Filtering transcriptions for user: {user_id_str} (is_admin: {is_admin})")
+                else:
+                    # If no user_id provided and not admin, return empty
+                    # Match unassigned transcriptions (assigned_user_id is None or doesn't exist)
+                    query_filter = {
+                        '$or': [
+                            {'assigned_user_id': None},
+                            {'assigned_user_id': {'$exists': False}}
+                        ]
+                    }
+                    print("⚠️  No user_id provided for non-admin user, showing unassigned only")
             
-            # Build query filter with user_id
-            query_filter = {'user_id': user_id}
-            
-            # Get total count for this user
+            # Get total count
             total_count = self.collection.count_documents(query_filter)
+            print(f"📊 Query filter: {query_filter}, Total count: {total_count}")
             
-            # Get documents sorted by created_at descending (newest first), filtered by user_id
+            # Get documents sorted by created_at descending (newest first)
             cursor = self.collection.find(query_filter).sort('created_at', -1).skip(skip).limit(limit)
             
             transcriptions = []
@@ -389,10 +555,30 @@ class StorageManager:
                 # Extract summary info
                 transcription_data = doc.get('transcription_data', {})
                 s3_metadata = doc.get('s3_metadata', {})
-                
-                # Get filename from metadata if available, otherwise from S3 key
                 metadata = transcription_data.get('metadata', {})
-                display_filename = metadata.get('filename') or s3_metadata.get('key', '').split('/')[-1] if s3_metadata.get('key') else ''
+                
+                # Priority order for filename:
+                # 1. audio_path from metadata.audio_path or transcription_data.audio_path
+                # 2. S3 key (contains timestamped filename like "audio/20250120_123456_audio.mp3")
+                # 3. metadata.filename (fallback)
+                display_filename = ''
+                
+                # Check audio_path in both locations
+                audio_path = transcription_data.get('audio_path') or metadata.get('audio_path', '')
+                
+                if audio_path:
+                    # Extract filename from audio_path (handle paths like "/api/audio/5143282_audio.mp3" or "5143282_audio.mp3")
+                    if '/' in audio_path:
+                        display_filename = audio_path.split('/')[-1]
+                    else:
+                        display_filename = audio_path
+                elif s3_metadata.get('key'):
+                    # Use S3 key which contains timestamped filename (e.g., "audio/20250120_123456_audio.mp3")
+                    s3_key = s3_metadata.get('key', '')
+                    display_filename = s3_key.split('/')[-1] if '/' in s3_key else s3_key
+                else:
+                    # Fallback to metadata filename
+                    display_filename = metadata.get('filename', '')
                 
                 summary = {
                     '_id': doc['_id'],
@@ -404,7 +590,9 @@ class StorageManager:
                     'total_phrases': transcription_data.get('total_phrases', 0),
                     'audio_duration': transcription_data.get('audio_duration', 0),
                     's3_url': s3_metadata.get('url', ''),
-                    'filename': display_filename
+                    'filename': display_filename,
+                    'user_id': doc.get('user_id'),  # Creator
+                    'assigned_user_id': doc.get('assigned_user_id')  # Assigned user
                 }
                 transcriptions.append(summary)
             
@@ -424,12 +612,12 @@ class StorageManager:
     
     def update_transcription(self, document_id: str, transcription_data: Dict[str, Any], user_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Update transcription data in MongoDB.
+        Update transcription data in MongoDB (all users can update all data).
         
         Args:
             document_id: MongoDB document ID
             transcription_data: Updated transcription data
-            user_id: User ID to verify ownership (required)
+            user_id: Ignored (kept for backward compatibility)
             
         Returns:
             Dictionary with update result
@@ -441,21 +629,15 @@ class StorageManager:
                     'error': 'MongoDB not initialized'
                 }
             
-            if not user_id:
-                return {
-                    'success': False,
-                    'error': 'user_id is required to update transcription'
-                }
-            
             from bson import ObjectId
             
-            # Update document, preserving s3_metadata and timestamps, and verifying user_id
+            # Update document by ID only (no user_id filtering)
             update_result = self.collection.update_one(
-                {'_id': ObjectId(document_id), 'user_id': user_id},
+                {'_id': ObjectId(document_id)},
                 {
                     '$set': {
                         'transcription_data': transcription_data,
-                        'updated_at': datetime.utcnow()
+                        'updated_at': datetime.now(timezone.utc)
                     }
                 }
             )
@@ -463,7 +645,7 @@ class StorageManager:
             if update_result.matched_count == 0:
                 return {
                     'success': False,
-                    'error': 'Transcription not found or you do not have permission to update it'
+                    'error': 'Transcription not found'
                 }
             
             print(f"✅ Updated transcription in MongoDB: {document_id}")
@@ -482,11 +664,11 @@ class StorageManager:
     
     def delete_transcription(self, document_id: str, user_id: Optional[str] = None) -> Dict[str, Any]:
         """
-        Delete a transcription from MongoDB and its associated S3 audio file.
+        Delete a transcription from MongoDB and its associated S3 audio file (all users can delete all data).
         
         Args:
             document_id: MongoDB document ID
-            user_id: User ID to verify ownership (required)
+            user_id: Ignored (kept for backward compatibility)
             
         Returns:
             Dictionary with delete operation result
@@ -498,21 +680,15 @@ class StorageManager:
                     'error': 'MongoDB not initialized'
                 }
             
-            if not user_id:
-                return {
-                    'success': False,
-                    'error': 'user_id is required to delete transcription'
-                }
-            
             from bson import ObjectId
             
-            # First, get the document to extract S3 metadata before deleting, and verify user_id
-            document = self.collection.find_one({'_id': ObjectId(document_id), 'user_id': user_id})
+            # Get the document to extract S3 metadata before deleting (no user_id filtering)
+            document = self.collection.find_one({'_id': ObjectId(document_id)})
             
             if not document:
                 return {
                     'success': False,
-                    'error': 'Transcription not found or you do not have permission to delete it'
+                    'error': 'Transcription not found'
                 }
             
             # Extract S3 key from document
@@ -530,8 +706,8 @@ class StorageManager:
             else:
                 print(f"⚠️  No S3 key found in document, skipping S3 deletion")
             
-            # Delete document from MongoDB (with user_id verification)
-            delete_result = self.collection.delete_one({'_id': ObjectId(document_id), 'user_id': user_id})
+            # Delete document from MongoDB (no user_id filtering)
+            delete_result = self.collection.delete_one({'_id': ObjectId(document_id)})
             
             if delete_result.deleted_count == 0:
                 return {

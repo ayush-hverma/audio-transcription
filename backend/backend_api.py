@@ -16,6 +16,9 @@ import json
 from pathlib import Path
 import traceback
 import time
+import bcrypt
+from pymongo import MongoClient
+from datetime import datetime, timezone
 
 import sys
 from pathlib import Path
@@ -59,6 +62,31 @@ app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 # Initialize storage manager
 storage_manager = StorageManager()
 
+# Initialize MongoDB connection for users
+mongodb_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+mongodb_database = os.getenv('MONGODB_DATABASE', 'transcription_db')
+try:
+    mongo_client = MongoClient(mongodb_uri)
+    mongo_db = mongo_client[mongodb_database]
+    users_collection = mongo_db['users']
+    # Test connection
+    mongo_client.admin.command('ping')
+    print(f"✅ Connected to MongoDB for user authentication: {mongodb_database}")
+except Exception as e:
+    print(f"❌ Warning: Could not connect to MongoDB for user authentication: {str(e)}")
+    users_collection = None
+
+
+def get_user_from_request():
+    """
+    Get user information from request headers (X-User-ID and X-Is-Admin).
+    Returns tuple: (user_id, is_admin)
+    """
+    user_id = request.headers.get('X-User-ID')
+    is_admin_str = request.headers.get('X-Is-Admin', 'false').lower()
+    is_admin = is_admin_str == 'true'
+    return user_id, is_admin
+
 
 def allowed_audio_file(filename):
     """Check if audio file extension is allowed."""
@@ -78,6 +106,201 @@ def health_check():
         'service': 'Audio Transcription Backend API',
         'version': '1.0.0'
     })
+
+
+@app.route('/api/auth/login', methods=['POST'])
+def login():
+    """
+    Authenticate user with username and password.
+    
+    JSON Body:
+        - username: User's username
+        - password: User's password
+    
+    Returns:
+        JSON response with user information on success
+    """
+    try:
+        if not users_collection:
+            return jsonify({
+                'success': False,
+                'error': 'User authentication service unavailable. Please check MongoDB connection.'
+            }), 500
+        
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided'
+            }), 400
+        
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        
+        if not username or not password:
+            return jsonify({
+                'success': False,
+                'error': 'Username and password are required'
+            }), 400
+        
+        # Find user by username
+        user = users_collection.find_one({'username': username})
+        
+        if not user:
+            return jsonify({
+                'success': False,
+                'error': 'Invalid username or password'
+            }), 401
+        
+        # Verify password
+        password_hash = user.get('password_hash', '')
+        if not password_hash:
+            return jsonify({
+                'success': False,
+                'error': 'User account error. Please contact administrator.'
+            }), 500
+        
+        # Check password
+        if not bcrypt.checkpw(password.encode('utf-8'), password_hash.encode('utf-8')):
+            return jsonify({
+                'success': False,
+                'error': 'Invalid username or password'
+            }), 401
+        
+        # Update last login time
+        users_collection.update_one(
+            {'_id': user['_id']},
+            {'$set': {'last_login': datetime.now(timezone.utc), 'updated_at': datetime.now(timezone.utc)}}
+        )
+        
+        # Return user info (without password hash)
+        is_admin = user.get('is_admin', False)
+        user_info = {
+            'id': str(user['_id']),
+            'username': user.get('username', ''),
+            'email': user.get('email', ''),
+            'name': user.get('name', ''),
+            'is_admin': is_admin,
+            'created_at': user.get('created_at', datetime.now(timezone.utc)).isoformat() if isinstance(user.get('created_at'), datetime) else user.get('created_at')
+        }
+        
+        print(f"✅ User logged in: {username}")
+        
+        return jsonify({
+            'success': True,
+            'user': user_info,
+            'message': 'Login successful'
+        })
+    
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"❌ Error during login: {str(e)}")
+        print(error_trace)
+        
+        return jsonify({
+            'success': False,
+            'error': 'An error occurred during login. Please try again.'
+        }), 500
+
+
+@app.route('/api/auth/register', methods=['POST'])
+def register():
+    """
+    Register a new user account.
+    
+    JSON Body:
+        - username: Desired username (must be unique)
+        - password: User's password
+        - email: User's email (optional)
+        - name: User's full name (optional)
+    
+    Returns:
+        JSON response with user information on success
+    """
+    try:
+        if not users_collection:
+            return jsonify({
+                'success': False,
+                'error': 'User registration service unavailable. Please check MongoDB connection.'
+            }), 500
+        
+        data = request.get_json()
+        
+        if not data:
+            return jsonify({
+                'success': False,
+                'error': 'No data provided'
+            }), 400
+        
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        email = data.get('email', '').strip()
+        name = data.get('name', '').strip()
+        
+        if not username or not password:
+            return jsonify({
+                'success': False,
+                'error': 'Username and password are required'
+            }), 400
+        
+        if len(password) < 6:
+            return jsonify({
+                'success': False,
+                'error': 'Password must be at least 6 characters long'
+            }), 400
+        
+        # Check if username already exists
+        existing_user = users_collection.find_one({'username': username})
+        if existing_user:
+            return jsonify({
+                'success': False,
+                'error': 'Username already exists'
+            }), 409
+        
+        # Hash password
+        salt = bcrypt.gensalt()
+        password_hash = bcrypt.hashpw(password.encode('utf-8'), salt).decode('utf-8')
+        
+        # Create user document
+        user_doc = {
+            'username': username,
+            'password_hash': password_hash,
+            'email': email or f'{username}@example.com',
+            'name': name or username,
+            'created_at': datetime.now(timezone.utc),
+            'updated_at': datetime.now(timezone.utc)
+        }
+        
+        # Insert user
+        result = users_collection.insert_one(user_doc)
+        
+        # Return user info (without password hash)
+        user_info = {
+            'id': str(result.inserted_id),
+            'username': username,
+            'email': user_doc['email'],
+            'name': user_doc['name'],
+            'created_at': user_doc['created_at'].isoformat()
+        }
+        
+        print(f"✅ New user registered: {username}")
+        
+        return jsonify({
+            'success': True,
+            'user': user_info,
+            'message': 'Registration successful'
+        }), 201
+    
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"❌ Error during registration: {str(e)}")
+        print(error_trace)
+        
+        return jsonify({
+            'success': False,
+            'error': 'An error occurred during registration. Please try again.'
+        }), 500
 
 
 @app.route('/api/languages', methods=['GET'])
@@ -644,15 +867,16 @@ def transcribe_phrases():
 def save_to_database():
     """
     Save audio file to S3 and transcription data to MongoDB.
+    User ID is optional - if provided, it will be stored for tracking purposes.
     
     JSON Body:
         - audio_filename: Filename of the audio file (from metadata.audio_path)
         - transcription_data: Complete transcription data (words/phrases, metadata, etc.)
         - transcription_type: Type of transcription ('words' or 'phrases')
-        - user_id: User ID (from Google OAuth, typically the 'sub' field)
+        - user_id: User ID (optional, for tracking who created the transcription)
     
     Headers:
-        - X-User-ID: User ID (alternative to JSON body)
+        - X-User-ID: User ID (optional, alternative to JSON body)
     """
     try:
         data = request.get_json()
@@ -663,14 +887,8 @@ def save_to_database():
                 'error': 'No data provided'
             }), 400
         
-        # Get user_id from request body or headers
-        user_id = data.get('user_id') or request.headers.get('X-User-ID')
-        
-        if not user_id:
-            return jsonify({
-                'success': False,
-                'error': 'user_id is required. Please provide it in the request body or X-User-ID header.'
-            }), 400
+        # Get user_id from request body or headers (optional)
+        user_id = data.get('user_id') or request.headers.get('X-User-ID') or 'anonymous'
         
         # Extract audio filename from audio_path or use provided filename
         audio_path = data.get('audio_path', '')
@@ -704,12 +922,12 @@ def save_to_database():
                 'error': 'Transcription data is required'
             }), 400
         
-        # Save to S3 and MongoDB
+        # Save to S3 and MongoDB (user_id is optional, defaults to 'anonymous')
         result = storage_manager.save_transcription(
             local_audio_path=local_audio_path,
             transcription_data=transcription_data,
             original_filename=audio_filename,
-            user_id=user_id
+            user_id=user_id or 'anonymous'
         )
         
         if result['success']:
@@ -741,29 +959,38 @@ def save_to_database():
 @app.route('/api/transcriptions', methods=['GET'])
 def list_transcriptions():
     """
-    List saved transcriptions from MongoDB for the authenticated user.
+    List saved transcriptions from MongoDB.
+    Regular users can only see transcriptions assigned to them.
+    Admins can see all transcriptions.
+    
+    Headers:
+        - X-User-ID: User ID (required for non-admin users)
+        - X-Is-Admin: 'true' or 'false' (default: 'false')
     
     Query Parameters:
         - limit: Maximum number of results (default: 100)
         - skip: Number of results to skip (default: 0)
-    
-    Headers:
-        - X-User-ID: User ID (required)
     """
     try:
-        # Get user_id from headers
-        user_id = request.headers.get('X-User-ID')
-        
-        if not user_id:
-            return jsonify({
-                'success': False,
-                'error': 'user_id is required. Please provide it in the X-User-ID header.'
-            }), 400
-        
         limit = int(request.args.get('limit', 100))
         skip = int(request.args.get('skip', 0))
         
-        result = storage_manager.list_transcriptions(limit=limit, skip=skip, user_id=user_id)
+        # Get user info from headers
+        user_id, is_admin = get_user_from_request()
+        
+        # For non-admin users, user_id is required
+        if not is_admin and not user_id:
+            return jsonify({
+                'success': False,
+                'error': 'User ID is required. Please provide X-User-ID header.'
+            }), 400
+        
+        result = storage_manager.list_transcriptions(
+            limit=limit, 
+            skip=skip, 
+            user_id=user_id, 
+            is_admin=is_admin
+        )
         
         if result['success']:
             return jsonify({
@@ -791,21 +1018,29 @@ def list_transcriptions():
 def get_transcription_by_id(transcription_id):
     """
     Get a single transcription by MongoDB document ID.
+    Regular users can only access transcriptions assigned to them.
+    Admins can access all transcriptions.
     
     Headers:
-        - X-User-ID: User ID (required)
+        - X-User-ID: User ID (required for non-admin users)
+        - X-Is-Admin: 'true' or 'false' (default: 'false')
     """
     try:
-        # Get user_id from headers
-        user_id = request.headers.get('X-User-ID')
+        # Get user info from headers
+        user_id, is_admin = get_user_from_request()
         
-        if not user_id:
+        # For non-admin users, user_id is required
+        if not is_admin and not user_id:
             return jsonify({
                 'success': False,
-                'error': 'user_id is required. Please provide it in the X-User-ID header.'
+                'error': 'User ID is required. Please provide X-User-ID header.'
             }), 400
         
-        document = storage_manager.get_transcription(transcription_id, user_id=user_id)
+        document = storage_manager.get_transcription(
+            transcription_id, 
+            user_id=user_id, 
+            is_admin=is_admin
+        )
         
         if document:
             return jsonify({
@@ -815,7 +1050,7 @@ def get_transcription_by_id(transcription_id):
         else:
             return jsonify({
                 'success': False,
-                'error': 'Transcription not found or you do not have permission to access it'
+                'error': 'Transcription not found or access denied'
             }), 404
     
     except Exception as e:
@@ -832,24 +1067,12 @@ def get_transcription_by_id(transcription_id):
 @app.route('/api/transcriptions/<transcription_id>', methods=['PUT'])
 def update_transcription_by_id(transcription_id):
     """
-    Update a transcription in MongoDB.
+    Update a transcription in MongoDB (all users can update all data).
     
     JSON Body:
         - transcription_data: Updated transcription data
-    
-    Headers:
-        - X-User-ID: User ID (required)
     """
     try:
-        # Get user_id from headers
-        user_id = request.headers.get('X-User-ID')
-        
-        if not user_id:
-            return jsonify({
-                'success': False,
-                'error': 'user_id is required. Please provide it in the X-User-ID header.'
-            }), 400
-        
         data = request.get_json()
         
         if not data or 'transcription_data' not in data:
@@ -860,7 +1083,7 @@ def update_transcription_by_id(transcription_id):
         
         transcription_data = data['transcription_data']
         
-        result = storage_manager.update_transcription(transcription_id, transcription_data, user_id=user_id)
+        result = storage_manager.update_transcription(transcription_id, transcription_data)
         
         if result['success']:
             return jsonify({
@@ -885,25 +1108,171 @@ def update_transcription_by_id(transcription_id):
         }), 500
 
 
+@app.route('/api/admin/transcriptions/<transcription_id>/assign', methods=['POST'])
+def assign_transcription(transcription_id):
+    """
+    Assign a transcription to a user (admin only).
+    
+    Headers:
+        - X-Is-Admin: 'true' (required)
+    
+    JSON Body:
+        - assigned_user_id: User ID to assign the transcription to
+    """
+    try:
+        print(f"📝 Assign transcription endpoint called: transcription_id={transcription_id}")
+        
+        # Check if user is admin
+        _, is_admin = get_user_from_request()
+        if not is_admin:
+            print("❌ Admin access denied")
+            return jsonify({
+                'success': False,
+                'error': 'Admin access required'
+            }), 403
+        
+        data = request.get_json()
+        if not data or 'assigned_user_id' not in data:
+            return jsonify({
+                'success': False,
+                'error': 'assigned_user_id is required'
+            }), 400
+        
+        assigned_user_id = data['assigned_user_id']
+        print(f"📝 Assigning to user: {assigned_user_id}")
+        
+        # Verify user exists
+        if users_collection:
+            from bson import ObjectId
+            from bson.errors import InvalidId
+            
+            # Try to find user by ObjectId first
+            try:
+                user_obj_id = ObjectId(assigned_user_id)
+                user = users_collection.find_one({'_id': user_obj_id})
+            except (InvalidId, ValueError):
+                user = None
+            
+            # If not found by ObjectId, try by username
+            if not user:
+                user = users_collection.find_one({'username': assigned_user_id})
+            
+            if not user:
+                print(f"❌ User not found: {assigned_user_id}")
+                return jsonify({
+                    'success': False,
+                    'error': 'User not found'
+                }), 404
+            
+            assigned_user_id = str(user['_id'])
+            print(f"✅ Found user: {assigned_user_id}")
+        
+        result = storage_manager.assign_transcription(transcription_id, assigned_user_id)
+        
+        if result['success']:
+            assigned_id = result.get('assigned_user_id')
+            print(f"✅ Successfully assigned transcription {transcription_id} to user {assigned_id}")
+            
+            # Verify the assignment in the database
+            from bson import ObjectId
+            try:
+                doc = storage_manager.collection.find_one({'_id': ObjectId(transcription_id)})
+                if doc:
+                    saved_assigned = doc.get('assigned_user_id')
+                    print(f"   Database verification: assigned_user_id = {saved_assigned}")
+                    if str(saved_assigned) != str(assigned_id):
+                        print(f"   ⚠️  Warning: Mismatch! Expected {assigned_id}, found {saved_assigned}")
+            except Exception as verify_error:
+                print(f"   ⚠️  Could not verify assignment: {verify_error}")
+            
+            return jsonify({
+                'success': True,
+                'message': result.get('message', 'Transcription assigned successfully'),
+                'document_id': result.get('document_id'),
+                'assigned_user_id': assigned_id
+            })
+        else:
+            print(f"❌ Failed to assign: {result.get('error')}")
+            return jsonify({
+                'success': False,
+                'error': result.get('error', 'Failed to assign transcription')
+            }), 500
+    
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"❌ Error assigning transcription: {str(e)}")
+        print(error_trace)
+        
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/admin/transcriptions/<transcription_id>/unassign', methods=['POST'])
+def unassign_transcription(transcription_id):
+    """
+    Unassign a transcription (admin only).
+    
+    Headers:
+        - X-Is-Admin: 'true' (required)
+    """
+    try:
+        print(f"📝 Unassign transcription endpoint called: transcription_id={transcription_id}")
+        
+        # Check if user is admin
+        _, is_admin = get_user_from_request()
+        if not is_admin:
+            return jsonify({
+                'success': False,
+                'error': 'Admin access required'
+            }), 403
+        
+        result = storage_manager.unassign_transcription(transcription_id)
+        
+        if result['success']:
+            print(f"✅ Successfully unassigned transcription {transcription_id}")
+            return jsonify({
+                'success': True,
+                'message': result.get('message', 'Transcription unassigned successfully'),
+                'document_id': result.get('document_id')
+            })
+        else:
+            print(f"❌ Failed to unassign: {result.get('error')}")
+            return jsonify({
+                'success': False,
+                'error': result.get('error', 'Failed to unassign transcription')
+            }), 500
+    
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"❌ Error unassigning transcription: {str(e)}")
+        print(error_trace)
+        
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
 @app.route('/api/transcriptions/<transcription_id>', methods=['DELETE'])
 def delete_transcription_by_id(transcription_id):
     """
-    Delete a transcription from MongoDB.
+    Delete a transcription from MongoDB (admin only).
     
     Headers:
-        - X-User-ID: User ID (required)
+        - X-Is-Admin: 'true' (required)
     """
     try:
-        # Get user_id from headers
-        user_id = request.headers.get('X-User-ID')
-        
-        if not user_id:
+        # Check if user is admin
+        _, is_admin = get_user_from_request()
+        if not is_admin:
             return jsonify({
                 'success': False,
-                'error': 'user_id is required. Please provide it in the X-User-ID header.'
-            }), 400
+                'error': 'Admin access required'
+            }), 403
         
-        result = storage_manager.delete_transcription(transcription_id, user_id=user_id)
+        result = storage_manager.delete_transcription(transcription_id)
         
         if result['success']:
             return jsonify({
@@ -920,6 +1289,56 @@ def delete_transcription_by_id(transcription_id):
     except Exception as e:
         error_trace = traceback.format_exc()
         print(f"❌ Error deleting transcription: {str(e)}")
+        print(error_trace)
+        
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/admin/users', methods=['GET'])
+def list_users():
+    """
+    List all users (admin only).
+    
+    Headers:
+        - X-Is-Admin: 'true' (required)
+    """
+    try:
+        # Check if user is admin
+        _, is_admin = get_user_from_request()
+        if not is_admin:
+            return jsonify({
+                'success': False,
+                'error': 'Admin access required'
+            }), 403
+        
+        if not users_collection:
+            return jsonify({
+                'success': False,
+                'error': 'User service unavailable'
+            }), 500
+        
+        users = []
+        for user in users_collection.find({}, {'password_hash': 0}):  # Exclude password
+            user['_id'] = str(user['_id'])
+            if 'created_at' in user and isinstance(user['created_at'], datetime):
+                user['created_at'] = user['created_at'].isoformat()
+            if 'updated_at' in user and isinstance(user['updated_at'], datetime):
+                user['updated_at'] = user['updated_at'].isoformat()
+            if 'last_login' in user and isinstance(user['last_login'], datetime):
+                user['last_login'] = user['last_login'].isoformat()
+            users.append(user)
+        
+        return jsonify({
+            'success': True,
+            'users': users
+        })
+    
+    except Exception as e:
+        error_trace = traceback.format_exc()
+        print(f"❌ Error listing users: {str(e)}")
         print(error_trace)
         
         return jsonify({
@@ -958,6 +1377,8 @@ if __name__ == '__main__':
     print("="*100)
     print("\n🌐 API Endpoints:")
     print("   GET  /api/health                      - Health check")
+    print("   POST /api/auth/login                  - User login (username/password)")
+    print("   POST /api/auth/register               - User registration")
     print("   GET  /api/languages                   - Get supported languages")
     print("   POST /api/transcribe                  - Transcribe audio (word-level)")
     print("   POST /api/transcribe/phrases          - Transcribe audio (phrase-level with emotions)")
@@ -967,10 +1388,13 @@ if __name__ == '__main__':
     print("   POST /api/transcription/save          - Save edited transcription")
     print("   POST /api/transcription/save-to-database - Save to S3 and MongoDB")
     print("   GET  /api/transcription/download/<f>  - Download transcription")
-    print("   GET  /api/transcriptions              - List all saved transcriptions")
-    print("   GET  /api/transcriptions/<id>         - Get transcription by ID")
+    print("   GET  /api/transcriptions              - List saved transcriptions (filtered by user)")
+    print("   GET  /api/transcriptions/<id>         - Get transcription by ID (access controlled)")
     print("   PUT  /api/transcriptions/<id>         - Update transcription by ID")
-    print("   DELETE /api/transcriptions/<id>       - Delete transcription by ID")
+    print("   DELETE /api/transcriptions/<id>       - Delete transcription by ID (admin only)")
+    print("   POST /api/admin/transcriptions/<id>/assign - Assign transcription to user (admin)")
+    print("   POST /api/admin/transcriptions/<id>/unassign - Unassign transcription (admin)")
+    print("   GET  /api/admin/users                - List all users (admin)")
     print("="*100 + "\n")
     
     # Run server

@@ -10,7 +10,7 @@ from pathlib import Path
 # Get the script directory
 script_dir = Path(__file__).parent
 # Updated path
-data_dir = script_dir / "data"
+data_dir = script_dir / "data" / "data_3"
 backend_dir = script_dir / "backend"
 audio_diarization_script = backend_dir / "audio_diarization.py"
 

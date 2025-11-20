@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import App from './App';
 import PhrasesApp from './PhrasesApp';
-import { Mic2, MessageSquare, LogOut } from 'lucide-react';
+import { Mic2, MessageSquare, LogOut, Users } from 'lucide-react';
 
 interface MainAppProps {
   onSignOut?: () => void;
@@ -33,6 +33,7 @@ function MainApp({ onSignOut }: MainAppProps) {
 
   const isWordLevel = location.pathname.startsWith('/word-level');
   const isPhraseLevel = location.pathname.startsWith('/phrase-level');
+  const isAdmin = user?.is_admin || false;
 
   return (
     <div>
@@ -60,6 +61,19 @@ function MainApp({ onSignOut }: MainAppProps) {
               <MessageSquare className="h-5 w-5" />
               Phrase-Level
             </button>
+            {isAdmin && (
+              <button
+                onClick={() => navigate('/admin')}
+                className={`flex items-center gap-2 px-5 py-2 rounded-full font-medium transition-all ${
+                  location.pathname === '/admin'
+                    ? 'bg-green-600 text-white shadow-lg'
+                    : 'text-green-600 hover:bg-green-50'
+                }`}
+              >
+                <Users className="h-5 w-5" />
+                Admin
+              </button>
+            )}
           </div>
           
           {/* User info and sign out */}

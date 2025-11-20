@@ -1,35 +1,41 @@
 import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import axios from 'axios';
-import { Upload, Play, Download, Save, Edit2, Check, X, Loader2, Database, ChevronDown, ChevronUp, Edit, FolderOpen, Trash2, Plus } from 'lucide-react';
+import { Upload, Play, Download, Save, Edit2, Check, X, Loader2, Database, ChevronDown, ChevronUp, Edit, FolderOpen, Trash2, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 import AudioWaveformPlayer, { AudioWaveformPlayerHandle } from './components/AudioWaveformPlayer';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
-// Helper function to get user_id from localStorage
-const getUserId = (): string | null => {
+// Helper function to get user info from localStorage
+const getUserInfo = (): { id: string | null; isAdmin: boolean } => {
   try {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       const user = JSON.parse(userStr);
-      return user.sub || user.id || null; // Google OAuth uses 'sub' as the unique user ID
+      return {
+        id: user.sub || user.id || null, // Google OAuth uses 'sub' as the unique user ID
+        isAdmin: user.is_admin || false
+      };
     }
   } catch (error) {
-    console.error('Error getting user ID:', error);
+    console.error('Error getting user info:', error);
   }
-  return null;
+  return { id: null, isAdmin: false };
 };
 
-// Helper function to get axios config with user_id header
+// Helper function to get user_id (for backward compatibility)
+const getUserId = (): string | null => {
+  return getUserInfo().id;
+};
+
+// Helper function to get axios config with user headers
 const getAxiosConfig = () => {
-  const userId = getUserId();
-  if (!userId) {
-    throw new Error('User not authenticated. Please sign in again.');
+  const { id, isAdmin } = getUserInfo();
+  const headers: Record<string, string> = {};
+  if (id) {
+    headers['X-User-ID'] = id;
   }
-  return {
-    headers: {
-      'X-User-ID': userId
-    }
-  };
+  headers['X-Is-Admin'] = isAdmin ? 'true' : 'false';
+  return { headers };
 };
 
 interface Word {
@@ -116,6 +122,9 @@ function App() {
   const [newFilename, setNewFilename] = useState('');
   const [savedTranscriptions, setSavedTranscriptions] = useState<SavedTranscriptionSummary[]>([]);
   const [loadingSaved, setLoadingSaved] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(9); // 9 items per page (3x3 grid)
+  const [totalItems, setTotalItems] = useState(0);
   const [isAddingWord, setIsAddingWord] = useState(false);
   const [newWordValues, setNewWordValues] = useState<{ start: string; end: string; word: string }>({
     start: '',
@@ -165,20 +174,28 @@ function App() {
   useEffect(() => {
     fetchLanguages();
     fetchSavedTranscriptions();
-  }, []);
+  }, [currentPage]);
 
   const fetchSavedTranscriptions = async () => {
     setLoadingSaved(true);
     try {
       const config = getAxiosConfig();
-      const response = await axios.get(`${API_BASE_URL}/api/transcriptions`, config);
+      const skip = (currentPage - 1) * itemsPerPage;
+      // Fetch all transcriptions first to filter and get total count
+      const response = await axios.get(
+        `${API_BASE_URL}/api/transcriptions?limit=1000&skip=0`,
+        config
+      );
       if (response.data.success) {
         const allTranscriptions = response.data.data.transcriptions || [];
         // Filter only 'words' type transcriptions
         const wordsTranscriptions = allTranscriptions.filter(
           (t: SavedTranscriptionSummary) => t.transcription_type === 'words'
         );
-        setSavedTranscriptions(wordsTranscriptions);
+        setTotalItems(wordsTranscriptions.length);
+        // Apply pagination after filtering
+        const paginated = wordsTranscriptions.slice(skip, skip + itemsPerPage);
+        setSavedTranscriptions(paginated);
       }
     } catch (error: any) {
       console.error('Error fetching saved transcriptions:', error);
@@ -253,7 +270,12 @@ function App() {
       const response = await axios.delete(`${API_BASE_URL}/api/transcriptions/${id}`, config);
       if (response.data.success) {
         alert('Transcription deleted successfully!');
-        fetchSavedTranscriptions();
+        // If we deleted the last item on the page, go to previous page
+        if (savedTranscriptions.length === 1 && currentPage > 1) {
+          setCurrentPage(prev => prev - 1);
+        } else {
+          fetchSavedTranscriptions();
+        }
       } else {
         alert(`Error: ${response.data.error}`);
       }
@@ -589,12 +611,7 @@ function App() {
         }
       };
 
-      const userId = getUserId();
-      if (!userId) {
-        alert('User not authenticated. Please sign in again.');
-        setSavingToDatabase(false);
-        return;
-      }
+      const userId = getUserId(); // Optional, for tracking purposes
 
       // If we have a current transcription ID, update it; otherwise create a new one
       if (currentTranscriptionId) {
@@ -614,13 +631,15 @@ function App() {
           alert(`Error: ${response.data.error}`);
         }
       } else {
-        // Create new transcription
-        const saveData = {
+        // Create new transcription (user_id is optional)
+        const saveData: any = {
           audio_path: audioPath,
           audio_filename: audioFilename,
-          transcription_data: transcriptionDataToSave,
-          user_id: userId
+          transcription_data: transcriptionDataToSave
         };
+        if (userId) {
+          saveData.user_id = userId;
+        }
 
         const response = await axios.post(
           `${API_BASE_URL}/api/transcription/save-to-database`,
@@ -731,18 +750,16 @@ function App() {
         }
       };
 
-      const userId = getUserId();
-      if (!userId) {
-        alert('User not authenticated. Please sign in again.');
-        return;
-      }
+      const userId = getUserId(); // Optional, for tracking purposes
 
-      const saveData = {
+      const saveData: any = {
         audio_path: audioPath,
         audio_filename: audioFilename,
-        transcription_data: transcriptionDataToSave,
-        user_id: userId
+        transcription_data: transcriptionDataToSave
       };
+      if (userId) {
+        saveData.user_id = userId;
+      }
 
       const response = await axios.post(
         `${API_BASE_URL}/api/transcription/save-to-database`,
@@ -934,6 +951,7 @@ function App() {
                 <p>No saved word-level transcriptions found</p>
               </div>
             ) : (
+              <>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {savedTranscriptions.map((transcription) => (
                   <div
@@ -984,6 +1002,70 @@ function App() {
                   </div>
                 ))}
               </div>
+              
+              {/* Pagination Controls */}
+              {totalItems > itemsPerPage && (
+                <div className="mt-6 flex items-center justify-between bg-white rounded-lg shadow p-4">
+                  <div className="flex items-center gap-2 text-sm text-gray-600">
+                    <span>
+                      Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} transcriptions
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1 || loadingSaved}
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      Previous
+                    </button>
+                    
+                    <div className="flex items-center gap-1">
+                      {Array.from({ length: Math.ceil(totalItems / itemsPerPage) }, (_, i) => i + 1)
+                        .filter(page => {
+                          const totalPages = Math.ceil(totalItems / itemsPerPage);
+                          return page === 1 || 
+                                 page === totalPages || 
+                                 (page >= currentPage - 1 && page <= currentPage + 1);
+                        })
+                        .map((page, index, array) => {
+                          const prevPage = array[index - 1];
+                          const showEllipsis = prevPage && page - prevPage > 1;
+                          
+                          return (
+                            <div key={page} className="flex items-center gap-1">
+                              {showEllipsis && (
+                                <span className="px-2 text-gray-500">...</span>
+                              )}
+                              <button
+                                onClick={() => setCurrentPage(page)}
+                                disabled={loadingSaved}
+                                className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                                  currentPage === page
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                                } disabled:opacity-50 disabled:cursor-not-allowed`}
+                              >
+                                {page}
+                              </button>
+                            </div>
+                          );
+                        })}
+                    </div>
+                    
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.min(Math.ceil(totalItems / itemsPerPage), prev + 1))}
+                      disabled={currentPage >= Math.ceil(totalItems / itemsPerPage) || loadingSaved}
+                      className="flex items-center gap-1 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                      Next
+                      <ChevronRight className="h-4 w-4" />
+                    </button>
+                  </div>
+                </div>
+              )}
+              </>
             )}
           </div>
         )}

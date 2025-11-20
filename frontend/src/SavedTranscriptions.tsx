@@ -1,35 +1,36 @@
 import { useState, useEffect, useRef, useMemo, useCallback } from 'react';
 import axios from 'axios';
-import { Database, Play, Save, Edit2, Check, X, Loader2, ArrowLeft, Download, Trash2, Edit } from 'lucide-react';
+import { Database, Play, Save, Edit2, Check, X, Loader2, ArrowLeft, Download, Trash2, Edit, ChevronLeft, ChevronRight } from 'lucide-react';
 import AudioWaveformPlayer, { AudioWaveformPlayerHandle } from './components/AudioWaveformPlayer';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || (import.meta.env.DEV ? 'http://localhost:5002' : '/api');
 
-// Helper function to get user_id from localStorage
-const getUserId = (): string | null => {
+// Helper function to get user info from localStorage
+const getUserInfo = (): { id: string | null; isAdmin: boolean } => {
   try {
     const userStr = localStorage.getItem('user');
     if (userStr) {
       const user = JSON.parse(userStr);
-      return user.sub || user.id || null; // Google OAuth uses 'sub' as the unique user ID
+      return {
+        id: user.sub || user.id || null, // Google OAuth uses 'sub' as the unique user ID
+        isAdmin: user.is_admin || false
+      };
     }
   } catch (error) {
-    console.error('Error getting user ID:', error);
+    console.error('Error getting user info:', error);
   }
-  return null;
+  return { id: null, isAdmin: false };
 };
 
-// Helper function to get axios config with user_id header
+// Helper function to get axios config with user headers
 const getAxiosConfig = () => {
-  const userId = getUserId();
-  if (!userId) {
-    throw new Error('User not authenticated. Please sign in again.');
+  const { id, isAdmin } = getUserInfo();
+  const headers: Record<string, string> = {};
+  if (id) {
+    headers['X-User-ID'] = id;
   }
-  return {
-    headers: {
-      'X-User-ID': userId
-    }
-  };
+  headers['X-Is-Admin'] = isAdmin ? 'true' : 'false';
+  return { headers };
 };
 
 interface Word {
@@ -92,6 +93,9 @@ function SavedTranscriptions() {
   const [selectedTranscription, setSelectedTranscription] = useState<TranscriptionDocument | null>(null);
   const [loading, setLoading] = useState(false);
   const [loadingDetails, setLoadingDetails] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12); // 12 items per page (3x4 grid)
+  const [totalItems, setTotalItems] = useState(0);
   const [audioUrl, setAudioUrl] = useState('');
   const [currentPlayingIndex, setCurrentPlayingIndex] = useState<number | null>(null);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
@@ -126,15 +130,20 @@ function SavedTranscriptions() {
 
   useEffect(() => {
     fetchTranscriptions();
-  }, []);
+  }, [currentPage]);
 
   const fetchTranscriptions = async () => {
     setLoading(true);
     try {
       const config = getAxiosConfig();
-      const response = await axios.get(`${API_BASE_URL}/api/transcriptions`, config);
+      const skip = (currentPage - 1) * itemsPerPage;
+      const response = await axios.get(
+        `${API_BASE_URL}/api/transcriptions?limit=${itemsPerPage}&skip=${skip}`,
+        config
+      );
       if (response.data.success) {
         setTranscriptions(response.data.data.transcriptions || []);
+        setTotalItems(response.data.data.total || 0);
       } else {
         alert(`Error: ${response.data.error}`);
       }
@@ -551,6 +560,10 @@ function SavedTranscriptions() {
         
         // Refresh the list
         fetchTranscriptions();
+        // If we deleted the last item on the page, go to previous page
+        if (transcriptions.length === 1 && currentPage > 1) {
+          setCurrentPage(prev => prev - 1);
+        }
       } else {
         alert(`Error: ${response.data.error}`);
       }
@@ -999,6 +1012,7 @@ function SavedTranscriptions() {
             <p className="text-gray-400 text-sm mt-2">Save a transcription to see it here</p>
           </div>
         ) : (
+          <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {transcriptions.map((transcription) => (
               <div
@@ -1060,6 +1074,72 @@ function SavedTranscriptions() {
               </div>
             ))}
           </div>
+          
+          {/* Pagination Controls */}
+          {totalItems > itemsPerPage && (
+            <div className="mt-8 flex items-center justify-between bg-white rounded-lg shadow-lg p-4">
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span>
+                  Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} transcriptions
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  disabled={currentPage === 1 || loading}
+                  className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  Previous
+                </button>
+                
+                <div className="flex items-center gap-1">
+                  {Array.from({ length: Math.ceil(totalItems / itemsPerPage) }, (_, i) => i + 1)
+                    .filter(page => {
+                      // Show first page, last page, current page, and pages around current
+                      const totalPages = Math.ceil(totalItems / itemsPerPage);
+                      return page === 1 || 
+                             page === totalPages || 
+                             (page >= currentPage - 1 && page <= currentPage + 1);
+                    })
+                    .map((page, index, array) => {
+                      // Add ellipsis between non-consecutive pages
+                      const prevPage = array[index - 1];
+                      const showEllipsis = prevPage && page - prevPage > 1;
+                      
+                      return (
+                        <div key={page} className="flex items-center gap-1">
+                          {showEllipsis && (
+                            <span className="px-2 text-gray-500">...</span>
+                          )}
+                          <button
+                            onClick={() => setCurrentPage(page)}
+                            disabled={loading}
+                            className={`px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                              currentPage === page
+                                ? 'bg-indigo-600 text-white'
+                                : 'text-gray-700 bg-white border border-gray-300 hover:bg-gray-50'
+                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                          >
+                            {page}
+                          </button>
+                        </div>
+                      );
+                    })}
+                </div>
+                
+                <button
+                  onClick={() => setCurrentPage(prev => Math.min(Math.ceil(totalItems / itemsPerPage), prev + 1))}
+                  disabled={currentPage >= Math.ceil(totalItems / itemsPerPage) || loading}
+                  className="flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                >
+                  Next
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+          </>
         )}
       </div>
     </main>
