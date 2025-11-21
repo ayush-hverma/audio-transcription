@@ -300,16 +300,39 @@ const AudioWaveformPlayer = forwardRef<AudioWaveformPlayerHandle, AudioWaveformP
         contentEditable: false,
       });
 
+      // Verify region is draggable and resizable
+      // console.log('Region created:', {
+      //   start: region.start,
+      //   end: region.end,
+      //   drag: region.drag,
+      //   resize: region.resize,
+      //   hasOn: typeof region.on === 'function',
+      // });
+
       currentRegionRef.current = region;
       selectedWordIndexRef.current = selectedWord.index;
 
-      // Handle region updates
+      // Handle region updates with debouncing for update event
+      let updateTimeout: ReturnType<typeof setTimeout> | null = null;
       const handleUpdate = () => {
         if (region && callbacksRef.current.onWordTimeUpdate) {
           isUpdatingFromRegionRef.current = true;
-          const newStart = region.start;
-          const newEnd = region.end;
-          callbacksRef.current.onWordTimeUpdate(selectedWord.index, newStart, newEnd);
+          // Try different ways to get start/end in case the API is different
+          const newStart = (region as any).start ?? (region as any).getStart?.() ?? region.start;
+          const newEnd = (region as any).end ?? (region as any).getEnd?.() ?? region.end;
+          // console.log('Region update handler called:', { 
+          //   newStart, 
+          //   newEnd, 
+          //   index: selectedWord.index,
+          //   regionStart: region.start,
+          //   regionEnd: region.end,
+          //   regionProps: Object.keys(region),
+          // });
+          if (Number.isFinite(newStart) && Number.isFinite(newEnd)) {
+            callbacksRef.current.onWordTimeUpdate(selectedWord.index, newStart, newEnd);
+          } else {
+            console.warn('Invalid start/end values:', { newStart, newEnd });
+          }
           // Reset flag after a short delay to allow state updates to complete
           setTimeout(() => {
             isUpdatingFromRegionRef.current = false;
@@ -317,33 +340,136 @@ const AudioWaveformPlayer = forwardRef<AudioWaveformPlayerHandle, AudioWaveformP
         }
       };
 
-      region.on('update-end', handleUpdate);
+      const handleUpdateDebounced = () => {
+        // Clear any pending update
+        if (updateTimeout) {
+          clearTimeout(updateTimeout);
+        }
+        // Debounce the update to avoid too many calls during dragging
+        updateTimeout = setTimeout(handleUpdate, 50);
+      };
 
-      // Scroll to region
+      // Listen to region events - WaveSurfer.js v7 uses 'update' and 'update-end' on the region
+      // Also try listening on the regions plugin instance
+      const regionUpdateHandler = (updatedRegion: any) => {
+        if (updatedRegion === region) {
+          handleUpdate();
+        }
+      };
+
+      const regionUpdateEndHandler = (updatedRegion: any) => {
+        if (updatedRegion === region) {
+          handleUpdate();
+        }
+      };
+
+      // Listen on the region itself - these are the primary events for drag/resize
+      // console.log('Setting up region event listeners...');
+      try {
+        region.on('update', () => {
+          // console.log('Region update event fired');
+          handleUpdateDebounced();
+        });
+        region.on('update-end', () => {
+          // console.log('Region update-end event fired');
+          handleUpdate();
+        });
+        // console.log('Region event listeners registered successfully');
+      } catch (error) {
+        console.error('Error registering region events:', error);
+      }
+      
+      // Also listen on the regions plugin instance (some versions emit events there)
+      if (regionsRef.current) {
+        try {
+          (regionsRef.current as any).on('region-updated', regionUpdateHandler);
+          (regionsRef.current as any).on('region-update-ended', regionUpdateEndHandler);
+        } catch (error) {
+          // Some versions might not support these events
+          console.debug('Could not register plugin-level events:', error);
+        }
+      }
+
+      // Also try listening to DOM events on the region element as a fallback
       requestAnimationFrame(() => {
         try {
           const regionElement = region.element;
-          if (regionElement && containerRef.current) {
-            const container = containerRef.current.closest('.overflow-x-auto');
-            if (container) {
-              const regionLeft = regionElement.offsetLeft;
-              const containerWidth = container.clientWidth;
-              const scrollLeft = container.scrollLeft;
-              const regionCenter = regionLeft - containerWidth / 2 + regionElement.offsetWidth / 2;
-              container.scrollTo({
-                left: scrollLeft + regionCenter,
-                behavior: 'smooth',
-              });
+          if (regionElement) {
+            // Listen to mouseup events on the region element as a fallback
+            const handleMouseUp = () => {
+              // console.log('Region element mouseup - checking for updates');
+              // Small delay to ensure region properties are updated
+              setTimeout(() => {
+                if (region && callbacksRef.current.onWordTimeUpdate) {
+                  const newStart = region.start;
+                  const newEnd = region.end;
+                  if (Number.isFinite(newStart) && Number.isFinite(newEnd)) {
+                    // console.log('Fallback update from mouseup:', { newStart, newEnd });
+                    handleUpdate();
+                  }
+                }
+              }, 10);
+            };
+            
+            regionElement.addEventListener('mouseup', handleMouseUp);
+            regionElement.addEventListener('touchend', handleMouseUp);
+            
+            // Store handler for cleanup
+            (regionElement as any)._handleMouseUp = handleMouseUp;
+            
+            // Scroll to region
+            if (containerRef.current) {
+              const container = containerRef.current.closest('.overflow-x-auto');
+              if (container) {
+                const regionLeft = regionElement.offsetLeft;
+                const containerWidth = container.clientWidth;
+                const scrollLeft = container.scrollLeft;
+                const regionCenter = regionLeft - containerWidth / 2 + regionElement.offsetWidth / 2;
+                container.scrollTo({
+                  left: scrollLeft + regionCenter,
+                  behavior: 'smooth',
+                });
+              }
             }
           }
         } catch (error) {
-          console.debug('Error scrolling to region:', error);
+          console.debug('Error setting up region element listeners:', error);
         }
       });
 
       return () => {
+        if (updateTimeout) {
+          clearTimeout(updateTimeout);
+        }
         if (region) {
-          region.un('update-end', handleUpdate);
+          // Remove event listeners from region
+          try {
+            region.un('update', handleUpdateDebounced);
+            region.un('update-end', handleUpdate);
+          } catch (error) {
+            console.debug('Error removing region event listeners:', error);
+          }
+          
+          // Remove DOM event listeners from region element
+          try {
+            const regionElement = region.element;
+            if (regionElement && (regionElement as any)._handleMouseUp) {
+              regionElement.removeEventListener('mouseup', (regionElement as any)._handleMouseUp);
+              regionElement.removeEventListener('touchend', (regionElement as any)._handleMouseUp);
+              delete (regionElement as any)._handleMouseUp;
+            }
+          } catch (error) {
+            console.debug('Error removing DOM event listeners:', error);
+          }
+        }
+        // Remove event listeners from regions plugin
+        if (regionsRef.current) {
+          try {
+            (regionsRef.current as any).un('region-updated', regionUpdateHandler);
+            (regionsRef.current as any).un('region-update-ended', regionUpdateEndHandler);
+          } catch (error) {
+            // Ignore errors when removing listeners
+          }
         }
       };
     }, [selectedWord, isReady]);
