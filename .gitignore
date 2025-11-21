@@ -107,3 +107,5 @@ json_to_csv.py
 save_outputs_to_db.py
 copy_data_to_outputs.py
 /outputs
+SOP_ADMIN.md
+SOP_USER.md
