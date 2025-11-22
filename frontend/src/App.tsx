@@ -1606,6 +1606,46 @@ function App() {
                     <Download className="h-4 w-4 mr-2" />
                     Download
                   </button>
+                  {currentTranscriptionId && (
+                    <div className="relative">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const savedRecord = allSavedTranscriptions.find(t => t._id === currentTranscriptionId);
+                          const isFlagged = savedRecord?.is_flagged || false;
+                          
+                          if (isFlagged) {
+                            handleFlagTranscription(currentTranscriptionId, true);
+                          } else {
+                            if (showFlagDropdown === currentTranscriptionId) {
+                              setShowFlagDropdown(null);
+                            } else {
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              setDropdownPosition({
+                                top: rect.bottom + 5,
+                                right: window.innerWidth - rect.right
+                              });
+                              setShowFlagDropdown(currentTranscriptionId);
+                            }
+                          }
+                        }}
+                        disabled={flagging === currentTranscriptionId}
+                        className={`font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 ${
+                           (allSavedTranscriptions.find(t => t._id === currentTranscriptionId)?.is_flagged)
+                            ? 'bg-red-100 text-red-600 hover:bg-red-200 border border-red-200'
+                            : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-300'
+                        }`}
+                        title={(allSavedTranscriptions.find(t => t._id === currentTranscriptionId)?.is_flagged) ? "Unflag transcription" : "Flag transcription"}
+                      >
+                        {flagging === currentTranscriptionId ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Flag className={`h-4 w-4 ${(allSavedTranscriptions.find(t => t._id === currentTranscriptionId)?.is_flagged) ? 'fill-current' : ''}`} />
+                        )}
+                        {(allSavedTranscriptions.find(t => t._id === currentTranscriptionId)?.is_flagged) ? 'Flagged' : 'Flag'}
+                      </button>
+                    </div>
+                  )}
                   <button
                     onClick={() => {
                       if (hasChanges) {

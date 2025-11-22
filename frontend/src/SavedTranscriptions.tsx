@@ -650,6 +650,10 @@ function SavedTranscriptions() {
       if (response.data.success) {
         // Reload data
         fetchTranscriptions();
+        // If we are viewing this transcription, reload its details to update the flag status
+        if (selectedTranscription && selectedTranscription._id === transcriptionId) {
+          fetchTranscriptionDetails(transcriptionId);
+        }
       } else {
         alert(`Error: ${response.data.error}`);
       }
@@ -841,6 +845,41 @@ function SavedTranscriptions() {
                   <Download className="h-4 w-4 mr-2" />
                   Download
                 </button>
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if ((selectedTranscription as any).is_flagged) {
+                        handleFlagTranscription(selectedTranscription._id, true);
+                      } else {
+                        if (showFlagDropdown === selectedTranscription._id) {
+                          setShowFlagDropdown(null);
+                        } else {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setDropdownPosition({
+                            top: rect.bottom + 5,
+                            right: window.innerWidth - rect.right
+                          });
+                          setShowFlagDropdown(selectedTranscription._id);
+                        }
+                      }
+                    }}
+                    disabled={flagging === selectedTranscription._id}
+                    className={`font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2 ${
+                      (selectedTranscription as any).is_flagged
+                        ? 'bg-red-100 text-red-600 hover:bg-red-200 border border-red-200'
+                        : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-300'
+                    }`}
+                    title={(selectedTranscription as any).is_flagged ? "Unflag transcription" : "Flag transcription"}
+                  >
+                    {flagging === selectedTranscription._id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Flag className={`h-4 w-4 ${(selectedTranscription as any).is_flagged ? 'fill-current' : ''}`} />
+                    )}
+                    {(selectedTranscription as any).is_flagged ? 'Flagged' : 'Flag'}
+                  </button>
+                </div>
                 {getUserInfo().isAdmin && (
                   <button
                     onClick={() => selectedTranscription && deleteTranscription(selectedTranscription._id)}
